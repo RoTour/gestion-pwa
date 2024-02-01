@@ -2,5 +2,5 @@
 	import '../app.css';
 </script>
 
-<header>Version: 1</header>
+<header>AppVersion: 2</header>
 <slot/>

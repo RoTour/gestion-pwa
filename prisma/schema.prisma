@@ -17,12 +17,12 @@ model Player {
 }
 
 model Resources {
-  gold    Int
-  wood    Int
-  marble  Int
-  wine    Int
-  sulfur  Int
-  crystal Int
+  gold    Int @default(0)
+  wood    Int @default(0)
+  marble  Int @default(0)
+  wine    Int @default(0)
+  sulfur  Int @default(0)
+  crystal Int @default(0)
 
   player   Player @relation(fields: [playerId], references: [id])
   playerId String @unique
