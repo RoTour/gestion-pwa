@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model Player {
+  id        String     @id @default(uuid())
+  name      String
+  Resources Resources?
+}
+
+model Resources {
+  gold    Int
+  wood    Int
+  marble  Int
+  wine    Int
+  sulfur  Int
+  crystal Int
+
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String @unique
+}
