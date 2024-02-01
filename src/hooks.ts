@@ -15,6 +15,7 @@ const checkAuth: Handle = async ({ event, resolve }) => {
 		console.error(error);
 		throw redirect(303, '/auth/login');
 	}
+	event.locals.user = data?.user;
 	return resolve(event)
 };
 

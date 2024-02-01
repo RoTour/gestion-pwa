@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 
-	$: errorMessage = $page.error?.message || '';
+  $: errorMessage = $page.form?.message || '';
 </script>
 
 <form use:enhance method="POST" action="?/login" class="flex flex-col p-4">
@@ -22,3 +22,5 @@
 	{/if}
 	<button type="submit" class="bg-emerald-300 py-2 px-4 mt-4 font-extrabold">Login</button>
 </form>
+
+<p class="px-4">Pas de compte ? <a href="/auth/register"  class="font-bold text-emerald-300 underline">Créez-en un maintenant</a>.</p>
