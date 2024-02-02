@@ -60,5 +60,5 @@ export const DashboardRepository = () => ({
 				update: { amount: workforce.wine }
 			});
 		});
-	}
+	},
 });

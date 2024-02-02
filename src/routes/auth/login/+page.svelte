@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { handleSubmit } from '$lib/helpers/form.helper';
+	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 
 	$: errorMessage = $page.form?.message || '';
+	
+	const login = async () => {
+		appIsLoading.set(true);
+		return handleSubmit();
+	}
 </script>
 
-<form use:enhance method="POST" action="?/login" class="flex flex-col p-4">
+<form use:enhance={login} method="POST" action="?/login" class="flex flex-col p-4">
 	<label for="email">Email: </label>
 	<input type="email" id="email" name="email" class="border-solid border-black border px-4 py-2" />
 

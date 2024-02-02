@@ -2,11 +2,19 @@ import { DashboardRepository } from '$lib/modules/dashboard/dashboard.repository
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async (event) => {
-	const user = event.locals.user;
+export const load: PageServerLoad = async ({locals, fetch}) => {
+	const user = locals.user;
 	if (!user) {
 		throw redirect(303, '/auth/login');
 	}
+
+	const updateResources = await fetch('/api/realtime/resources', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+	});
+	console.debug('updateResources', await updateResources.json());
 
 	const player = await DashboardRepository().getPlayerFromEmail(user?.email || '');
 	if (!player) {

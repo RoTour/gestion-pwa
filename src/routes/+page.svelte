@@ -105,7 +105,7 @@
 	<ResourceIcon type={'citizen'} />
 	<p>Citoyens: {$playerCitizensAvailable} / {$playerMaxCitizens}</p>
 </div>
-<section class="flex justify-center items-center ">
+<section class="flex justify-center items-center bg-emerald-100 pb-2 pt-1">
 	<ResourceIcon type={'gold'}/> <p class="font-bold text-xl mt-2">{resources.gold}</p>
 </section>
 
