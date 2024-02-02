@@ -1,8 +1,8 @@
 import { AppError } from '$lib/app.error';
 import { prisma } from '$lib/clients/prisma';
 import { supabase } from '$lib/clients/supabase';
-import type { Session, User } from '@supabase/supabase-js';
 import { Prisma } from '@prisma/client';
+import type { Session, User } from '@supabase/supabase-js';
 
 export const authRepository = () => ({
 	register: async (email: string, username: string, password: string): Promise<User> => {

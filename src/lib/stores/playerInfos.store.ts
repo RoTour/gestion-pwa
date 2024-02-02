@@ -1,4 +1,4 @@
-import { type Resources, type Citizen, type Player } from '@prisma/client';
+import { type Citizen, type Player, type Resources } from '@prisma/client';
 import { writable } from 'svelte/store';
 
 export const playerInfos = writable<Player | undefined>(undefined);

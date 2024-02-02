@@ -10,16 +10,16 @@ const login: Action = async ({ request, cookies }) => {
 	const password = form.get('password')?.toString() ?? '';
 
 	try {
-		const {user, session} = await authRepository().login(email, password);
+		const { session } = await authRepository().login(email, password);
 		cookies.set(COOKEYS.authToken, session.access_token, { path: '/', maxAge: 60 * 60 * 24 * 30 });
-	}	catch (error) {
+	} catch (error) {
 		console.error(error);
 		if (error instanceof AppError) return fail(error.status, { message: error.message });
-		return fail(500, {message: 'Unknown error'});
+		return fail(500, { message: 'Unknown error' });
 	}
 	throw redirect(301, '/');
 };
 
 export const actions: Actions = {
 	login
-}
+};

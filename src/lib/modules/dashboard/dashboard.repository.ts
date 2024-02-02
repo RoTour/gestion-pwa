@@ -2,12 +2,15 @@ import { prisma } from '$lib/clients/prisma';
 
 export const DashboardRepository = () => ({
 	getPlayerFromEmail: async (email: string) => {
-		return prisma.player.findUnique({ 
+		return prisma.player.findUnique({
 			where: { email: email },
 			include: { Resources: true, Citizens: true }
-		 });
+		});
 	},
-	saveWorkforce: async (email: string, workforce: { wood: number, marble: number, sulfur: number, crystal: number, wine: number }) => {
+	saveWorkforce: async (
+		email: string,
+		workforce: { wood: number; marble: number; sulfur: number; crystal: number; wine: number }
+	) => {
 		return prisma.$transaction(async () => {
 			const player = await prisma.player.findUnique({ where: { email } });
 			if (!player) return;
@@ -56,6 +59,6 @@ export const DashboardRepository = () => ({
 				},
 				update: { amount: workforce.wine }
 			});
-		})
+		});
 	}
-})
+});

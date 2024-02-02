@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { playerCitizensAvailable, playerCitizensMax } from '$lib/stores/playerInfos.store';
+	import { playerCitizensAvailable } from '$lib/stores/playerInfos.store';
 	import type { ResourceType } from '../../models/ResourceType';
 	import ResourceIcon from './ResourceIcon.svelte';
 

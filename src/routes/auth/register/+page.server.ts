@@ -13,7 +13,7 @@ const register: Action = async ({ request }) => {
 	} catch (error) {
 		console.error(error);
 		if (error instanceof AppError) return fail(error.status, { message: error.message });
-		return fail(500, {message: 'Unknown error'});
+		return fail(500, { message: 'Unknown error' });
 	}
 	throw redirect(301, '/auth/login');
 };

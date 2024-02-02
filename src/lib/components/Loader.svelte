@@ -1,5 +1,5 @@
 <div class="fixed top-0 left-0 h-full w-full bg-black bg-opacity-50">
-  <span class="loader"></span>
+	<span class="loader"></span>
 </div>
 
 <style lang="postcss">
@@ -11,8 +11,8 @@
 		border-radius: 50%;
 		display: inline-block;
 		position: absolute;
-    top: 50%;
-    left: 50%;
+		top: 50%;
+		left: 50%;
 		box-sizing: border-box;
 		animation: rotation 2s linear infinite;
 	}
@@ -26,7 +26,7 @@
 		bottom: 0;
 		margin: auto;
 		border: 3px dotted;
-    @apply border-emerald-300;
+		@apply border-emerald-300;
 		border-style: solid solid dotted;
 		width: 24px;
 		height: 24px;

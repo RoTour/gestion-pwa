@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { ResourceType } from "../../models/ResourceType";
+	import type { ResourceType } from '../../models/ResourceType';
 
-  export let type: ResourceType = "gold"
+	export let type: ResourceType = 'gold';
 </script>
 
-<img src={`/resources/${type}.png`} class="h-8 w-8" alt={type}/>
+<img src={`/resources/${type}.png`} class="h-8 w-8" alt={type} />
