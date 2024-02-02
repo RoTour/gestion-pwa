@@ -2,10 +2,24 @@ import { prisma } from '$lib/clients/prisma';
 
 export const DashboardRepository = () => ({
 	getPlayerFromEmail: async (email: string) => {
-		return prisma.player.findUnique({
+		let user = await prisma.player.findUnique({
 			where: { email: email },
-			include: { Resources: true, Citizens: true }
+			include: { Resources: true, Workforces: true }
 		});
+		if (!user) {
+			await prisma.player.create({
+				data: {
+					email: email,
+					name: email.split('@')[0],
+					Resources: { create: { wood: 0, marble: 0, sulfur: 0, crystal: 0, wine: 0 } }
+				}
+			});
+			user = await prisma.player.findUnique({
+				where: { email: email },
+				include: { Resources: true, Workforces: true }
+			});
+		}
+		return user;
 	},
 	saveWorkforce: async (
 		email: string,
@@ -60,5 +74,5 @@ export const DashboardRepository = () => ({
 				update: { amount: workforce.wine }
 			});
 		});
-	},
+	}
 });

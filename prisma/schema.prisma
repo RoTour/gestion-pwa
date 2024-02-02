@@ -24,11 +24,13 @@ model Player {
   name        String
   maxCitizens Int    @default(50)
 
-  Resources Resources?
-  Citizens  Citizen[]
+  Resources  Resources?
+  Workforces Workforce[]
 }
 
 model Resources {
+  id String @id @default(uuid())
+
   gold    Int @default(0)
   wood    Int @default(0)
   marble  Int @default(0)
@@ -42,7 +44,7 @@ model Resources {
   playerId String @unique
 }
 
-model Citizen {
+model Workforce {
   amount Int @default(0)
 
   resource EnumResource @default(WOOD)

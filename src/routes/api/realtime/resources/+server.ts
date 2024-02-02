@@ -1,12 +1,15 @@
-import { DashboardRepository } from '$lib/modules/dashboard/dashboard.repository';
+import { ResourcesServices } from '$lib/modules/realtime/resources.service';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ locals }) => {
 	const user = locals.user;
 	if (!user) return json({ message: 'Unauthorized' }, { status: 401 });
-	await DashboardRepository().updateResources(user.email);
-	console.debug('updateResources', user.email);
-
+	try {
+		await ResourcesServices().updateResources(user.email ?? '');
+	} catch (error) {
+		console.error('updateResources', error);
+		return json({ message: 'Error updating resources' }, { status: 500 });
+	}
 	return json({
 		message: 'OK'
 	})

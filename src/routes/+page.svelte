@@ -8,13 +8,13 @@
 	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
 	import { handleSubmit } from '$lib/helpers/form.helper';
 	import {
-		playerCitizens,
 		playerCitizensAvailable,
 		playerInfos,
 		playerCitizensMax as playerMaxCitizens,
-		playerResources
+		playerResources,
+		playerWorkforces
 	} from '$lib/stores/playerInfos.store';
-	import type { Citizen, Resources } from '@prisma/client';
+	import type { Resources, Workforce } from '@prisma/client';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -41,7 +41,7 @@
 	$: player = data.player;
 	$: if (data.player && !appInit) {
 		initValues(data.player);
-		initWorkforces(data.player.Citizens ?? []);
+		initWorkforces(data.player.Workforces ?? []);
 		appInit = true;
 	}
 	$: if (!data.player) {
@@ -53,18 +53,18 @@
 		resources = newValues.Resources!;
 		playerInfos.set(player);
 		playerResources.set(resources);
-		playerCitizens.set(newValues.Citizens ?? []);
+		playerWorkforces.set(newValues.Workforces ?? []);
 		playerCitizensAvailable.set(data.citizenAvailable);
 		playerMaxCitizens.set(player.maxCitizens);
 	};
 
-	const initWorkforces = (citizens: Citizen[]) => {
+	const initWorkforces = (newValues: Workforce[]) => {
 		playerCitizensAvailable.set(data.citizenAvailable);
-		workforces.wood = citizens?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
-		workforces.marble = citizens?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
-		workforces.sulfur = citizens?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
-		workforces.wine = citizens?.find((c) => c.resource === 'WINE')?.amount ?? 0;
-		workforces.crystal = citizens?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
+		workforces.wood = newValues?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
+		workforces.marble = newValues?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
+		workforces.sulfur = newValues?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
+		workforces.wine = newValues?.find((c) => c.resource === 'WINE')?.amount ?? 0;
+		workforces.crystal = newValues?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
 		workforces = { ...workforces };
 	};
 
@@ -78,14 +78,14 @@
 
 	const cancelChanges = async () => {
 		touched = false;
-		initWorkforces(player.Citizens);
+		initWorkforces(player.Workforces);
 	};
 
 	$: console.debug({ touched });
 	$: if ($page.form?.player) {
 		console.debug('initValues form', $page.form.player);
 		initValues($page.form.player);
-		initWorkforces($page.form.player.Citizens ?? []);
+		initWorkforces($page.form.player.Workforces ?? []);
 		touchedWorkforces = {
 			wood: false,
 			marble: false,
@@ -106,7 +106,8 @@
 	<p>Citoyens: {$playerCitizensAvailable} / {$playerMaxCitizens}</p>
 </div>
 <section class="flex justify-center items-center bg-emerald-100 pb-2 pt-1">
-	<ResourceIcon type={'gold'}/> <p class="font-bold text-xl mt-2">{resources.gold}</p>
+	<ResourceIcon type={'gold'} />
+	<p class="font-bold text-xl mt-2">{resources.gold}</p>
 </section>
 
 <h2>Ressources:</h2>
