@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import { handleSubmit } from '$lib/helpers/form.helper';
 
   $: errorMessage = $page.form?.message || '';
 </script>
 
-<form use:enhance action="?/register" class="flex flex-col p-4" method="POST">
+<form use:enhance={() => handleSubmit()} action="?/register" class="flex flex-col p-4" method="POST">
 	<label for="email">Email: </label>
 	<input type="email" id="email" name="email" class="border-solid border-black border px-4 py-2" />
 

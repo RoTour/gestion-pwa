@@ -8,8 +8,6 @@ const register: Action = async ({ request }) => {
 	const username = form.get('username')?.toString() ?? '';
 	const password = form.get('password')?.toString() ?? '';
 
-	console.debug('register', { email, username, password });
-
 	try {
 		await authRepository().register(email, username, password);
 	} catch (error) {

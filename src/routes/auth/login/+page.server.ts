@@ -1,15 +1,13 @@
 import { AppError } from '$lib/app.error';
-import { COOKEYS } from '$lib/cookies.helper';
+import { COOKEYS } from '$lib/helpers/cookies.helper';
 import { authRepository } from '$lib/modules/auth/auth.service';
-import { fail, type Actions, redirect, type Action } from '@sveltejs/kit';
+import { fail, redirect, type Action, type Actions } from '@sveltejs/kit';
 
 const login: Action = async ({ request, cookies }) => {
 	const form = await request.formData();
 
 	const email = form.get('email')?.toString() ?? '';
 	const password = form.get('password')?.toString() ?? '';
-
-	console.debug('login', { email, password });
 
 	try {
 		const {user, session} = await authRepository().login(email, password);

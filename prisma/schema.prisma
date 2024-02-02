@@ -10,11 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum EnumResource {
+  WOOD
+  MARBLE
+  WINE
+  SULFUR
+  CRYSTAL
+}
+
 model Player {
-  id        String     @id @default(uuid())
-  email     String     @unique
-  name      String
+  id          String @id @default(uuid())
+  email       String @unique
+  name        String
+  maxCitizens Int    @default(50)
+
   Resources Resources?
+  Citizens  Citizen[]
 }
 
 model Resources {
@@ -25,6 +36,26 @@ model Resources {
   sulfur  Int @default(0)
   crystal Int @default(0)
 
+  updatedAt DateTime @default(now()) @updatedAt
+
   player   Player @relation(fields: [playerId], references: [id])
   playerId String @unique
+}
+
+model Citizen {
+  amount Int @default(0)
+
+  resource EnumResource @default(WOOD)
+
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+
+  @@id([playerId, resource])
+}
+
+model ResourcePrice {
+  resource EnumResource @unique @default(WOOD)
+  amount   Int          @default(50)
+
+  updatedAt DateTime @default(now()) @updatedAt
 }
