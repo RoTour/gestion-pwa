@@ -11,7 +11,6 @@ const login: Action = async ({ request, cookies }) => {
 
 	try {
 		const {user, session} = await authRepository().login(email, password);
-		console.debug('login success', user, session);
 		cookies.set(COOKEYS.authToken, session.access_token, { path: '/', maxAge: 60 * 60 * 24 * 30 });
 	}	catch (error) {
 		console.error(error);

@@ -8,7 +8,12 @@
 
 	export let workforce = 0;
 
-  const editWorkforce = (change: -1 | 1) => {
+	const editWorkforce = (change: -1 | 1) => {
+		console.log('editWorkforce', {
+			change,
+			workforce,
+			playerCitizensAvailable: $playerCitizensAvailable
+		});
 		if (change === -1 && workforce > 0) {
 			workforce--;
 			playerCitizensAvailable.update((n) => n - change);
@@ -16,7 +21,7 @@
 			workforce++;
 			playerCitizensAvailable.update((n) => n - change);
 		}
-  }
+	};
 </script>
 
 <div class="flex items-center">
@@ -27,15 +32,15 @@
 
 	<div class="ml-auto flex items-center gap-4">
 		<button
-			on:click={() => (editWorkforce(-1))}
+			on:click={() => editWorkforce(-1)}
 			class="border-2 border-solid border-emerald-300 aspect-square h-8">-</button
 		>
-		<div class="flex">
+		<div class="flex items-center">
 			<ResourceIcon type={'citizen'} />
-			<input type="number" class="text-center max-w-8" bind:value={workforce} />
+			<p class="text-center w-4">{workforce}</p>
 		</div>
 		<button
-			on:click={() => (editWorkforce(1))}
+			on:click={() => editWorkforce(1)}
 			class="border-2 border-solid border-emerald-300 aspect-square h-8">+</button
 		>
 	</div>

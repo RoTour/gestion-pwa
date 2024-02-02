@@ -1,17 +1,15 @@
 import { DashboardRepository } from '$lib/modules/dashboard/dashboard.repository';
-import { redirect, type Actions, type Action, fail } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
 	if (!user) {
-		console.debug('layout load', 'redirecting to login');
 		throw redirect(303, '/auth/login');
 	}
 
 	const player = await DashboardRepository().getPlayerFromEmail(user?.email || '');
 	if (!player) {
-		console.debug('layout load', 'redirecting to login');
 		throw redirect(303, '/auth/login');
 	}
 	return {
@@ -34,8 +32,6 @@ export const actions: Actions = {
 
 		if (isNaN(+wood) || isNaN(+marble) || isNaN(+sulfur) || isNaN(+crystal) || isNaN(+wine))
 			return fail(400, { message: 'Invalid parameters' });
-
-		console.debug('saveworkforce', { wood, marble, sulfur, crystal, wine });
 
 		const playerEmail = event.locals.user?.email;
 		if (!playerEmail) return fail(400, { message: 'Invalid user' });
