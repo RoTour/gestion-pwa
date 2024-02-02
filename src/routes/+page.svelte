@@ -14,6 +14,7 @@
 	} from '$lib/stores/playerInfos.store';
 	import type { Resources } from '@prisma/client';
 	import type { PageData } from './$types';
+	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
 
 	export let data: PageData;
 	let player: typeof data.player;
@@ -36,21 +37,22 @@
 		playerCitizens.set(data.player?.Citizens ?? []);
 		playerCitizensAvailable.set(data.citizenAvailable);
 		playerMaxCitizens.set(player.maxCitizens);
-		workforces.wood = data.player.Citizens?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
-		workforces.marble = data.player.Citizens?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
-		workforces.sulfur = data.player.Citizens?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
-		workforces.wine = data.player.Citizens?.find((c) => c.resource === 'WINE')?.amount ?? 0;
-		workforces.crystal = data.player.Citizens?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
+		initWorkforces();
 		appInit = true;
 	}
 	$: if (!data.player) {
 		goto('/auth/login');
 	}
 
-	const saveChanges = () => {
-		console.log('Saving changes', { workforces });
-		handleSubmit();
+	const initWorkforces = () => {
+		playerCitizensAvailable.set(data.citizenAvailable);
+		workforces.wood = data.player.Citizens?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
+		workforces.marble = data.player.Citizens?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
+		workforces.sulfur = data.player.Citizens?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
+		workforces.wine = data.player.Citizens?.find((c) => c.resource === 'WINE')?.amount ?? 0;
+		workforces.crystal = data.player.Citizens?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
 	};
+	const saveChanges = () => handleSubmit();
 </script>
 
 <p class="">
@@ -106,5 +108,8 @@
 	{#each Object.entries(workforces) as [resourceType, workforce]}
 		<input type="hidden" name={resourceType} value={workforce} />
 	{/each}
-	<Button on:click={saveChanges} className="ml-auto block">Validate</Button>
+	<div class="flex gap-4">
+		<SecondaryButton on:click={initWorkforces} type={'button'}>Cancel</SecondaryButton>
+		<Button on:click={saveChanges} className="ml-auto block">Validate</Button>
+	</div>
 </form>
