@@ -23,7 +23,7 @@ export const load: PageServerLoad = async ({locals, fetch}) => {
 	return {
 		player,
 		citizenAvailable:
-			player.maxCitizens - player.Workforces.reduce((acc, citizen) => acc + citizen.amount, 0)
+			player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0)
 	};
 };
 

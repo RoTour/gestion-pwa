@@ -28,7 +28,7 @@ export const DashboardRepository = () => ({
 		return prisma.$transaction(async () => {
 			const player = await prisma.player.findUnique({ where: { email } });
 			if (!player) return;
-			await prisma.citizen.upsert({
+			await prisma.workforce.upsert({
 				where: { playerId_resource: { playerId: player.id, resource: 'WOOD' } },
 				create: {
 					player: { connect: { email } },
@@ -37,7 +37,7 @@ export const DashboardRepository = () => ({
 				},
 				update: { amount: workforce.wood }
 			});
-			await prisma.citizen.upsert({
+			await prisma.workforce.upsert({
 				where: { playerId_resource: { playerId: player.id, resource: 'MARBLE' } },
 				create: {
 					player: { connect: { email } },
@@ -46,7 +46,7 @@ export const DashboardRepository = () => ({
 				},
 				update: { amount: workforce.marble }
 			});
-			await prisma.citizen.upsert({
+			await prisma.workforce.upsert({
 				where: { playerId_resource: { playerId: player.id, resource: 'SULFUR' } },
 				create: {
 					player: { connect: { email } },
@@ -55,7 +55,7 @@ export const DashboardRepository = () => ({
 				},
 				update: { amount: workforce.sulfur }
 			});
-			await prisma.citizen.upsert({
+			await prisma.workforce.upsert({
 				where: { playerId_resource: { playerId: player.id, resource: 'CRYSTAL' } },
 				create: {
 					player: { connect: { email } },
@@ -64,7 +64,7 @@ export const DashboardRepository = () => ({
 				},
 				update: { amount: workforce.crystal }
 			});
-			await prisma.citizen.upsert({
+			await prisma.workforce.upsert({
 				where: { playerId_resource: { playerId: player.id, resource: 'WINE' } },
 				create: {
 					player: { connect: { email } },

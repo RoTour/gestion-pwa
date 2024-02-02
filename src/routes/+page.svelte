@@ -59,7 +59,7 @@
 	};
 
 	const initWorkforces = (newValues: Workforce[]) => {
-		playerCitizensAvailable.set(data.citizenAvailable);
+		playerCitizensAvailable.set(player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0));
 		workforces.wood = newValues?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
 		workforces.marble = newValues?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
 		workforces.sulfur = newValues?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
