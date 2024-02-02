@@ -12,15 +12,26 @@
 		playerCitizensMax as playerMaxCitizens,
 		playerResources
 	} from '$lib/stores/playerInfos.store';
-	import type { Resources } from '@prisma/client';
+	import type { Citizen, Resources } from '@prisma/client';
 	import type { PageData } from './$types';
 	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
+	import { page } from '$app/stores';
+	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 
 	export let data: PageData;
 	let player: typeof data.player;
 	let resources: Resources;
 	let appInit = false;
-	const workforces = {
+	let touchedWorkforces = {
+		wood: false,
+		marble: false,
+		sulfur: false,
+		wine: false,
+		crystal: false
+	};
+	$: touched = Object.values(touchedWorkforces).some((t) => t);
+
+	let workforces = {
 		wood: 0,
 		marble: 0,
 		sulfur: 0,
@@ -30,29 +41,60 @@
 
 	$: player = data.player;
 	$: if (data.player && !appInit) {
-		player = data.player;
-		resources = data.player.Resources!;
-		playerInfos.set(player);
-		playerResources.set(resources);
-		playerCitizens.set(data.player?.Citizens ?? []);
-		playerCitizensAvailable.set(data.citizenAvailable);
-		playerMaxCitizens.set(player.maxCitizens);
-		initWorkforces();
+		initValues(data.player);
+		initWorkforces(data.player.Citizens ?? []);
 		appInit = true;
 	}
 	$: if (!data.player) {
 		goto('/auth/login');
 	}
 
-	const initWorkforces = () => {
+	const initValues = (newValues: typeof data.player) => {
+		player = newValues;
+		resources = newValues.Resources!;
+		playerInfos.set(player);
+		playerResources.set(resources);
+		playerCitizens.set(newValues.Citizens ?? []);
 		playerCitizensAvailable.set(data.citizenAvailable);
-		workforces.wood = data.player.Citizens?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
-		workforces.marble = data.player.Citizens?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
-		workforces.sulfur = data.player.Citizens?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
-		workforces.wine = data.player.Citizens?.find((c) => c.resource === 'WINE')?.amount ?? 0;
-		workforces.crystal = data.player.Citizens?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
+		playerMaxCitizens.set(player.maxCitizens);
 	};
-	const saveChanges = () => handleSubmit();
+
+	const initWorkforces = (citizens: Citizen[]) => {
+		playerCitizensAvailable.set(data.citizenAvailable);
+		workforces.wood = citizens?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
+		workforces.marble = citizens?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
+		workforces.sulfur = citizens?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
+		workforces.wine = citizens?.find((c) => c.resource === 'WINE')?.amount ?? 0;
+		workforces.crystal = citizens?.find((c) => c.resource === 'CRYSTAL')?.amount ?? 0;
+		workforces = { ...workforces };
+	};
+
+	const saveChanges = async () => {
+		console.debug('Saving changes');
+		return await handleSubmit().then((after) => {
+			touched = false;
+			return after;
+		});
+	};
+
+	const cancelChanges = async () => {
+		touched = false;
+		initWorkforces(player.Citizens);
+	};
+
+	$: console.debug({ touched });
+	$: if ($page.form?.player) {
+		console.debug('initValues form', $page.form.player);
+		initValues($page.form.player);
+		initWorkforces($page.form.player.Citizens ?? []);
+		touchedWorkforces = {
+			wood: false,
+			marble: false,
+			sulfur: false,
+			wine: false,
+			crystal: false
+		};
+	}
 </script>
 
 <p class="">
@@ -67,49 +109,66 @@
 
 <h2>Ressources:</h2>
 <ul class="px-4 flex flex-col gap-2">
-	<li>
-		<ManageWorkforce
-			bind:workforce={workforces.wood}
-			resourceType={'wood'}
-			resourceAmount={resources.wood}
-		/>
-	</li>
-	<li>
-		<ManageWorkforce
-			bind:workforce={workforces.marble}
-			resourceType={'marble'}
-			resourceAmount={resources.marble}
-		/>
-	</li>
-	<li>
-		<ManageWorkforce
-			bind:workforce={workforces.sulfur}
-			resourceType={'sulfur'}
-			resourceAmount={resources.sulfur}
-		/>
-	</li>
-	<li>
-		<ManageWorkforce
-			bind:workforce={workforces.wine}
-			resourceType={'wine'}
-			resourceAmount={resources.wine}
-		/>
-	</li>
-	<li>
-		<ManageWorkforce
-			bind:workforce={workforces.crystal}
-			resourceType={'crystal'}
-			resourceAmount={resources.crystal}
-		/>
-	</li>
+	{#key workforces.wood}
+		<li>
+			<ManageWorkforce
+				bind:workforce={workforces.wood}
+				on:touched={(e) => (touchedWorkforces.wood = e.detail.touched)}
+				resourceType={'wood'}
+				resourceAmount={resources.wood}
+			/>
+		</li>
+	{/key}
+	{#key workforces.marble}
+		<li>
+			<ManageWorkforce
+				bind:workforce={workforces.marble}
+				on:touched={(e) => (touchedWorkforces.marble = e.detail.touched)}
+				resourceType={'marble'}
+				resourceAmount={resources.marble}
+			/>
+		</li>
+	{/key}
+	{#key workforces.sulfur}
+		<li>
+			<ManageWorkforce
+				bind:workforce={workforces.sulfur}
+				on:touched={(e) => (touchedWorkforces.sulfur = e.detail.touched)}
+				resourceType={'sulfur'}
+				resourceAmount={resources.sulfur}
+			/>
+		</li>
+	{/key}
+	{#key workforces.wine}
+		<li>
+			<ManageWorkforce
+				bind:workforce={workforces.wine}
+				on:touched={(e) => (touchedWorkforces.wine = e.detail.touched)}
+				resourceType={'wine'}
+				resourceAmount={resources.wine}
+			/>
+		</li>
+	{/key}
+	{#key workforces.crystal}
+		<li>
+			<ManageWorkforce
+				bind:workforce={workforces.crystal}
+				on:touched={(e) => (touchedWorkforces.crystal = e.detail.touched)}
+				resourceType={'crystal'}
+				resourceAmount={resources.crystal}
+			/>
+		</li>
+	{/key}
 </ul>
 
-<form method="POST" action="?/saveworkforce" use:enhance={() => handleSubmit()} class="p-4">
-	{#each Object.entries(workforces) as [resourceType, workforce]}
-		<input type="hidden" name={resourceType} value={workforce} />
-	{/each}
-	<div class="flex gap-4">
-		<SecondaryButton on:click={initWorkforces} type={'button'}>Cancel</SecondaryButton>
-		<Button on:click={saveChanges} className="ml-auto block">Validate</Button>
-	</div>
+<form method="POST" action="?/saveworkforce" use:enhance={saveChanges} class="p-4">
+	{#if touched}
+		{#each Object.entries(workforces) as [resourceType, workforce]}
+			<input type="hidden" name={resourceType} value={workforce} />
+		{/each}
+		<div class="flex gap-4">
+			<SecondaryButton on:click={cancelChanges} type={'button'}>Cancel</SecondaryButton>
+			<Button className="ml-auto block">Validate</Button>
+		</div>
+	{/if}
 </form>

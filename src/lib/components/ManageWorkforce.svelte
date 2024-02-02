@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { playerCitizensAvailable } from '$lib/stores/playerInfos.store';
+	import { createEventDispatcher } from 'svelte';
 	import type { ResourceType } from '../../models/ResourceType';
 	import ResourceIcon from './ResourceIcon.svelte';
 
@@ -7,13 +8,10 @@
 	export let resourceAmount: number = 0;
 
 	export let workforce = 0;
+	let initialWorkforce = workforce;
+	const touchedEmitter = createEventDispatcher()
 
 	const editWorkforce = (change: -1 | 1) => {
-		console.log('editWorkforce', {
-			change,
-			workforce,
-			playerCitizensAvailable: $playerCitizensAvailable
-		});
 		if (change === -1 && workforce > 0) {
 			workforce--;
 			playerCitizensAvailable.update((n) => n - change);
@@ -21,6 +19,7 @@
 			workforce++;
 			playerCitizensAvailable.update((n) => n - change);
 		}
+		touchedEmitter('touched', { touched: initialWorkforce !== workforce});
 	};
 </script>
 

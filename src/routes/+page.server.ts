@@ -33,6 +33,8 @@ export const actions: Actions = {
 		if (isNaN(+wood) || isNaN(+marble) || isNaN(+sulfur) || isNaN(+crystal) || isNaN(+wine))
 			return fail(400, { message: 'Invalid parameters' });
 
+		console.debug('saveworkforce', {wood, marble, sulfur, crystal, wine});
+
 		const playerEmail = event.locals.user?.email;
 		if (!playerEmail) return fail(400, { message: 'Invalid user' });
 
@@ -48,9 +50,18 @@ export const actions: Actions = {
 			console.error('saveworkforce', error);
 			return fail(500, { message: 'Error saving workforce' });
 		}
+		let player;
+		try {
+			player = await DashboardRepository().getPlayerFromEmail(playerEmail);
+		} catch (error) {
+			console.error('saveworkforce', error);
+			return fail(500, { message: 'Error retrieving player' });
+		}
+		console.debug('Workforce saved');
 		return {
 			status: 200,
-			message: 'Workforce saved'
+			message: 'Workforce saved',
+			player: player
 		};
 	}
 };
