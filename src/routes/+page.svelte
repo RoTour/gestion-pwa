@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';
 	import ManageWorkforce from '$lib/components/ManageWorkforce.svelte';
 	import ResourceIcon from '$lib/components/ResourceIcon.svelte';
+	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
 	import { handleSubmit } from '$lib/helpers/form.helper';
 	import {
 		playerCitizens,
@@ -14,9 +16,6 @@
 	} from '$lib/stores/playerInfos.store';
 	import type { Citizen, Resources } from '@prisma/client';
 	import type { PageData } from './$types';
-	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
-	import { page } from '$app/stores';
-	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 
 	export let data: PageData;
 	let player: typeof data.player;
@@ -106,6 +105,9 @@
 	<ResourceIcon type={'citizen'} />
 	<p>Citoyens: {$playerCitizensAvailable} / {$playerMaxCitizens}</p>
 </div>
+<section class="flex justify-center items-center ">
+	<ResourceIcon type={'gold'}/> <p class="font-bold text-xl mt-2">{resources.gold}</p>
+</section>
 
 <h2>Ressources:</h2>
 <ul class="px-4 flex flex-col gap-2">

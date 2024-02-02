@@ -4,4 +4,4 @@
 	export let type: ResourceType = 'gold';
 </script>
 
-<img src={`/resources/${type}.png`} class="h-8 w-8" alt={type} />
+<img src={`/resources/${type}.png`} class="h-12 w-12" alt={type} />

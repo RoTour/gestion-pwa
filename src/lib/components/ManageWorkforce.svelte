@@ -26,13 +26,13 @@
 <div class="flex items-center">
 	<div class="flex flex-1 items-center">
 		<ResourceIcon type={resourceType} />
-		<p class="ml-2">{resourceAmount}</p>
+		<p class="">{resourceAmount}</p>
 	</div>
 
 	<div class="ml-auto flex items-center gap-4">
 		<button
 			on:click={() => editWorkforce(-1)}
-			class="border-2 border-solid border-emerald-300 aspect-square h-8">-</button
+			class="border-2 border-solid border-emerald-300 aspect-square h-12">-</button
 		>
 		<div class="flex items-center">
 			<ResourceIcon type={'citizen'} />
@@ -40,7 +40,7 @@
 		</div>
 		<button
 			on:click={() => editWorkforce(1)}
-			class="border-2 border-solid border-emerald-300 aspect-square h-8">+</button
+			class="border-2 border-solid border-emerald-300 aspect-square h-12">+</button
 		>
 	</div>
 </div>
