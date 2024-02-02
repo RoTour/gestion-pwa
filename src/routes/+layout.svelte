@@ -4,7 +4,11 @@
 	import Button from '$lib/components/Button.svelte';
 	import Loader from '$lib/components/Loader.svelte';
 	import { appIsLoading } from '$lib/stores/appIsLoading.store';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
 	import '../app.css';
+
+	inject({ mode: dev ? 'development' : 'production' });
 
 	$: isAuthPage = $page.url.pathname.includes('/auth/');
 	const logout = () => {
