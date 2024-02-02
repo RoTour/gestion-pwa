@@ -102,7 +102,7 @@
 	</li>
 </ul>
 
-<form method="POST" action="?/saveworkforce" use:enhance={() => handleSubmit()} class="px-4">
+<form method="POST" action="?/saveworkforce" use:enhance={() => handleSubmit()} class="p-4">
 	{#each Object.entries(workforces) as [resourceType, workforce]}
 		<input type="hidden" name={resourceType} value={workforce} />
 	{/each}
