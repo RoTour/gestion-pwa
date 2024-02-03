@@ -31,12 +31,12 @@ model Player {
 model Resources {
   id String @id @default(uuid())
 
-  gold    Int @default(0)
-  wood    Int @default(0)
-  marble  Int @default(0)
-  wine    Int @default(0)
-  sulfur  Int @default(0)
-  crystal Int @default(0)
+  gold    BigInt @default(0)
+  wood    BigInt @default(0)
+  marble  BigInt @default(0)
+  wine    BigInt @default(0)
+  sulfur  BigInt @default(0)
+  crystal BigInt @default(0)
 
   updatedAt DateTime @default(now()) @updatedAt
 

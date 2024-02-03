@@ -26,7 +26,7 @@
 <div class="flex items-center">
 	<div class="flex flex-1 items-center">
 		<ResourceIcon type={resourceType} />
-		<p class="">{resourceAmount}</p>
+		<p class="">{Math.floor(Number(BigInt(resourceAmount) / 1000n))}</p>
 		<p class="ml-2">({workforce}/h)</p>
 	</div>
 
