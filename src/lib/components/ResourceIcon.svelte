@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { ResourceType } from '../../models/ResourceType';
+	import type { IconType } from '../../models/IconType';
 
-	export let type: ResourceType = 'gold';
+	export let type: IconType = 'gold';
 	export let className = '';
 </script>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { playerCitizensAvailable } from '$lib/stores/playerInfos.store';
 	import { createEventDispatcher } from 'svelte';
-	import type { ResourceType } from '../../models/ResourceType';
+	import type { IconType } from '../../models/IconType';
 	import ResourceIcon from './ResourceIcon.svelte';
 
-	export let resourceType: ResourceType = 'wood';
+	export let resourceType: IconType = 'wood';
 	export let resourceAmount: number = 0;
 
 	export let workforce = 0;

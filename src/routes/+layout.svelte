@@ -7,6 +7,7 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	import '../app.css';
+	import { playerResources } from '$lib/stores/playerInfos.store';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -15,6 +16,11 @@
 	const logout = () => {
 		goto('/auth/logout');
 	};
+
+	$: if ($page.data.user) {
+		console.debug('Setting player resources', $page.data.user.Resources);
+		playerResources.set($page.data.user.Resources);
+	}
 </script>
 
 <header class="flex justify-between items-center mb-4">
