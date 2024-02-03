@@ -12,7 +12,7 @@
 	inject({ mode: dev ? 'development' : 'production' });
 
 	$: isAuthPage = $page.url.pathname.includes('/auth/');
-	$: pathname = $page.url.pathname;
+
 	const logout = () => {
 		goto('/auth/logout');
 	};
@@ -24,7 +24,7 @@
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 5.2.0</p>
+	<p>AppVersion: 5.2.1</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}
