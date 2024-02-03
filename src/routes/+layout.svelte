@@ -11,13 +11,14 @@
 	inject({ mode: dev ? 'development' : 'production' });
 
 	$: isAuthPage = $page.url.pathname.includes('/auth/');
+	$: pathname = $page.url.pathname;
 	const logout = () => {
 		goto('/auth/logout');
 	};
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 4.1.0</p>
+	<p>AppVersion: 5.0.0</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}
@@ -27,3 +28,34 @@
 	<Loader />
 {/if}
 <slot />
+
+{#if !isAuthPage}
+	<nav class="flex gap-2 text-center bg-emerald-300 pt-2 pb-0 fixed bottom-0 w-full">
+		{#if pathname != '/market'}
+			<a href="/market" class="flex-1 bg-white">
+				<div class="h-16 flex items-center justify-center">
+					<img class="aspect-square h-14 inline-block" src="market.png" alt="Market" />
+				</div>
+			</a>
+		{:else}
+			<a href="/" class="flex-1 bg-white">
+				<div class="h-16 flex items-center justify-center">
+					<img class="aspect-square h-14 inline-block" src="home.png" alt="Home" />
+				</div>
+			</a>
+		{/if}
+		{#if pathname != '/buildings'}
+			<a href="/buildings" class="flex-1 bg-white">
+				<div class="h-16 flex items-center justify-center">
+					<img class="aspect-square h-14 inline-block" src="buildings.png" alt="Market" />
+				</div>
+			</a>
+		{:else}
+			<a href="/" class="flex-1 bg-white">
+				<div class="h-16 flex items-center justify-center">
+					<img class="aspect-square h-14 inline-block" src="home.png" alt="Home" />
+				</div>
+			</a>
+		{/if}
+	</nav>
+{/if}

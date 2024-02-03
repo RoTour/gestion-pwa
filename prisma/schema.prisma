@@ -57,7 +57,7 @@ model Workforce {
 
 model ResourcePrice {
   resource EnumResource @unique @default(WOOD)
-  amount   Int          @default(50)
+  price    Int          @default(50)
 
   updatedAt DateTime @default(now()) @updatedAt
 }
