@@ -1,4 +1,4 @@
-<div class="fixed top-0 left-0 h-full w-full bg-black bg-opacity-50">
+<div class="fixed z-20 top-0 left-0 h-full w-full bg-black bg-opacity-50">
 	<span class="loader"></span>
 </div>
 

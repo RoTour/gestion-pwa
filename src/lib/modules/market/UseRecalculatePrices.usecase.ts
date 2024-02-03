@@ -16,7 +16,7 @@ export const UseRecalculatePrices = () => ({
 			currentPrices = await repository.getPrices();
 		}
 		console.debug({ currentPrices });
-		const totalAmounts: TotalResourceAmount[] = await repository.getTotalAmounts();
+		const totalAmounts: TotalResourceAmount[] = await repository.getTotalProductionAmount();
 		// Calculate the total of all resources to find the average amount per resource.
 		const totalOfAllResources = totalAmounts.reduce((acc, curr) => acc + Number(curr.amount), 0);
 		const averageAmountPerResource = totalOfAllResources / totalAmounts.length;

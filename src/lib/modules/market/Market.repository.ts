@@ -35,47 +35,37 @@ export const MarketRepository = () => ({
 		});
 	},
 	// sum of all resources by type
-	getTotalAmounts: async () => {
+	getTotalProductionAmount: async () => {
 		return prisma.$transaction(async () => {
 			const sums = await Promise.all([
-				prisma.resources.aggregate({
-					_sum: {
-						wood: true
-					}
+				prisma.workforce.aggregate({
+					_sum: { amount: true },
+					where: { resource: 'WOOD'},
 				}),
-				prisma.resources.aggregate({
-					_sum: {
-						marble: true
-					}
+				prisma.workforce.aggregate({
+					_sum: { amount: true },
+					where: { resource: 'MARBLE'},
 				}),
-				prisma.resources.aggregate({
-					_sum: {
-						wine: true
-					}
+				prisma.workforce.aggregate({
+					_sum: { amount: true },
+					where: { resource: 'WINE'},
 				}),
-				prisma.resources.aggregate({
-					_sum: {
-						sulfur: true
-					}
+				prisma.workforce.aggregate({
+					_sum: { amount: true },
+					where: { resource: 'SULFUR'},
 				}),
-				prisma.resources.aggregate({
-					_sum: {
-						crystal: true
-					}
+				prisma.workforce.aggregate({
+					_sum: { amount: true },
+					where: { resource: 'CRYSTAL'},
 				}),
-				prisma.resources.aggregate({
-					_sum: {
-						gold: true
-					}
-				})
 			]);
 
 			const result: TotalResourceAmount[] = [
-				{ resource: 'WOOD', amount: sums[0]._sum.wood || BigInt(0) },
-				{ resource: 'MARBLE', amount: sums[1]._sum.marble || BigInt(0) },
-				{ resource: 'WINE', amount: sums[2]._sum.wine || BigInt(0) },
-				{ resource: 'SULFUR', amount: sums[3]._sum.sulfur || BigInt(0) },
-				{ resource: 'CRYSTAL', amount: sums[4]._sum.crystal || BigInt(0) },
+				{ resource: 'WOOD', amount: BigInt(sums[0]._sum.amount ?? 0) || BigInt(0) },
+				{ resource: 'MARBLE', amount: BigInt(sums[1]._sum.amount ?? 0) || BigInt(0) },
+				{ resource: 'WINE', amount: BigInt(sums[2]._sum.amount ?? 0) || BigInt(0) },
+				{ resource: 'SULFUR', amount: BigInt(sums[3]._sum.amount ?? 0) || BigInt(0) },
+				{ resource: 'CRYSTAL', amount: BigInt(sums[4]._sum.amount ?? 0) || BigInt(0) },
 			];
 
 			return result;
