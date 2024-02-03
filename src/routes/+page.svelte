@@ -59,7 +59,9 @@
 	};
 
 	const initWorkforces = (newValues: Workforce[]) => {
-		playerCitizensAvailable.set(player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0));
+		playerCitizensAvailable.set(
+			player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0)
+		);
 		workforces.wood = newValues?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
 		workforces.marble = newValues?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
 		workforces.sulfur = newValues?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;
@@ -107,7 +109,7 @@
 </div>
 <section class="flex justify-center items-center bg-emerald-100 pb-2 pt-1">
 	<ResourceIcon type={'gold'} />
-	<p class="font-bold text-xl mt-2">{resources.gold}</p>
+	<p class="font-bold text-xl mt-2">{Math.floor(Number(resources.gold / 100n))}</p>
 </section>
 
 <h2>Ressources:</h2>

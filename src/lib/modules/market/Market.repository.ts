@@ -80,5 +80,35 @@ export const MarketRepository = () => ({
 
 			return result;
 		});
-	}
+	},
+	sellResources: async (userEmail: string, resourceType: EnumResource, quantity: number) => {
+		await prisma.$transaction(async () => {
+			const price = await prisma.resourcePrice.findUnique({
+				where: { resource: resourceType }
+			});
+			if (!price) throw new Error('Resource not found');
+			const user = await prisma.player.findUnique({
+				where: { email: userEmail },
+				include: { Resources: true }
+			});
+			if (!user) throw new Error('User not found');
+			const totalPrice = price.price * quantity;
+			type Resources = 'wood' | 'marble' | 'sulfur' | 'crystal' | 'wine'
+			const currentAmountOfResource = user.Resources?.[resourceType.toLowerCase() as Resources] || BigInt(0);
+
+			if (currentAmountOfResource < BigInt(quantity))
+				throw new Error('Not enough resources');
+
+			const newAmount = currentAmountOfResource - BigInt(quantity) * 1000n;
+
+			console.debug('Selling', {quantity, currentAmountOfResource, newAmount, totalPrice});
+			await prisma.resources.update({
+				where: { playerId: user.id },
+				data: {
+					[resourceType.toLowerCase()]: newAmount,
+					gold: (user.Resources?.gold ?? 0n) + BigInt(totalPrice)
+				}
+			});
+		})
+	},
 });

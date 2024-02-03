@@ -6,6 +6,7 @@
 	import type { IconType } from '../../models/IconType';
 	import type { PageServerData } from './$types';
 	import type { EnumResource } from '@prisma/client';
+	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 
 	export let data: PageServerData;
 	const order = ['WOOD', 'MARBLE', 'SULFUR', 'WINE', 'CRYSTAL'];
@@ -17,6 +18,7 @@
 		WINE: 0n,
 		CRYSTAL: 0n
 	};
+	let playerGold = 0n;
 	onMount(() => {
 		playerResources.subscribe((value) => {
 			ressourcesAvailable = {
@@ -26,6 +28,7 @@
 				WINE: BigInt(value?.wine || 0),
 				CRYSTAL: BigInt(value?.crystal || 0)
 			};
+			playerGold = BigInt(value?.gold || 0);
 		});
 	});
 
@@ -38,6 +41,21 @@
 	};
 	$: console.log(prices);
 	$: console.debug({ ressourcesAvailable });
+
+	const sell = async (resource: EnumResource, quantity: number) => {
+		appIsLoading.set(true);
+		try {
+			const res = await fetch(`/api/market/sell`, {
+				method: 'POST',
+				body: JSON.stringify({ resource, quantity }),
+			});
+			const data = await res.json();
+			console.log(data);
+		} catch (e) {
+			console.error(e);
+		}
+		appIsLoading.set(false);
+	};
 </script>
 
 <div class="flex pb-4">
@@ -68,25 +86,43 @@
 
 			{#if action === 'buy'}
 				<div class="ml-auto flex gap-4">
-					<Button className="text-xs">1</Button>
-					<Button className="text-xs">10</Button>
-					<Button className="text-xs">100</Button>
+					<Button
+						disabled={price * 1 > playerGold}
+						className="text-xs {price * 1 > playerGold ? 'bg-gray-300' : ''}"
+					>
+						1
+					</Button>
+					<Button
+						disabled={price * 10 > playerGold}
+						className="text-xs {price * 10 > playerGold ? 'bg-gray-300' : ''}"
+					>
+						10
+					</Button>
+					<Button
+						disabled={price * 100 > playerGold}
+						className="text-xs {price * 100 > playerGold ? 'bg-gray-300' : ''}"
+					>
+						100
+					</Button>
 				</div>
 			{:else}
 				<div class="ml-auto flex gap-4">
 					<Button
+						on:click={() => sell(resource, 1)}
 						disabled={ressourcesAvailable[resource] / 1000n < 1n}
 						className="text-xs {ressourcesAvailable[resource] / 1000n < 1n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">1</Button
 					>
 					<Button
+						on:click={() => sell(resource, 10)}
 						disabled={ressourcesAvailable[resource] / 1000n < 10n}
 						className="text-xs {ressourcesAvailable[resource] / 1000n < 10n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">10</Button
 					>
 					<Button
+						on:click={() => sell(resource, 100)}
 						disabled={ressourcesAvailable[resource] / 1000n < 100n}
 						className="text-xs {ressourcesAvailable[resource] / 1000n < 100n
 							? 'bg-gray-300'
