@@ -16,6 +16,7 @@
 	} from '$lib/stores/playerInfos.store';
 	import type { Resources, Workforce } from '@prisma/client';
 	import type { PageData } from './$types';
+	import GoldAmount from '$lib/components/GoldAmount.svelte';
 
 	export let data: PageData;
 	let player: typeof data.player;
@@ -107,10 +108,7 @@
 	<ResourceIcon type={'citizen'} />
 	<p>Citoyens: {$playerCitizensAvailable} / {$playerMaxCitizens}</p>
 </div>
-<section class="flex justify-center items-center bg-emerald-100 pb-2 pt-1">
-	<ResourceIcon type={'gold'} />
-	<p class="font-bold text-xl mt-2">{Math.floor(Number(resources.gold / 100n))}</p>
-</section>
+<GoldAmount />
 
 <h2>Ressources:</h2>
 <ul class="px-4 flex flex-col gap-2">

@@ -40,24 +40,24 @@ export const MarketRepository = () => ({
 			const sums = await Promise.all([
 				prisma.workforce.aggregate({
 					_sum: { amount: true },
-					where: { resource: 'WOOD'},
+					where: { resource: 'WOOD' }
 				}),
 				prisma.workforce.aggregate({
 					_sum: { amount: true },
-					where: { resource: 'MARBLE'},
+					where: { resource: 'MARBLE' }
 				}),
 				prisma.workforce.aggregate({
 					_sum: { amount: true },
-					where: { resource: 'WINE'},
+					where: { resource: 'WINE' }
 				}),
 				prisma.workforce.aggregate({
 					_sum: { amount: true },
-					where: { resource: 'SULFUR'},
+					where: { resource: 'SULFUR' }
 				}),
 				prisma.workforce.aggregate({
 					_sum: { amount: true },
-					where: { resource: 'CRYSTAL'},
-				}),
+					where: { resource: 'CRYSTAL' }
+				})
 			]);
 
 			const result: TotalResourceAmount[] = [
@@ -65,7 +65,7 @@ export const MarketRepository = () => ({
 				{ resource: 'MARBLE', amount: BigInt(sums[1]._sum.amount ?? 0) || BigInt(0) },
 				{ resource: 'WINE', amount: BigInt(sums[2]._sum.amount ?? 0) || BigInt(0) },
 				{ resource: 'SULFUR', amount: BigInt(sums[3]._sum.amount ?? 0) || BigInt(0) },
-				{ resource: 'CRYSTAL', amount: BigInt(sums[4]._sum.amount ?? 0) || BigInt(0) },
+				{ resource: 'CRYSTAL', amount: BigInt(sums[4]._sum.amount ?? 0) || BigInt(0) }
 			];
 
 			return result;
@@ -83,15 +83,15 @@ export const MarketRepository = () => ({
 			});
 			if (!user) throw new Error('User not found');
 			const totalPrice = price.price * quantity;
-			type Resources = 'wood' | 'marble' | 'sulfur' | 'crystal' | 'wine'
-			const currentAmountOfResource = user.Resources?.[resourceType.toLowerCase() as Resources] || BigInt(0);
+			type Resources = 'wood' | 'marble' | 'sulfur' | 'crystal' | 'wine';
+			const currentAmountOfResource =
+				user.Resources?.[resourceType.toLowerCase() as Resources] || BigInt(0);
 
-			if (currentAmountOfResource < BigInt(quantity))
-				throw new Error('Not enough resources');
+			if (currentAmountOfResource < BigInt(quantity)) throw new Error('Not enough resources');
 
 			const newAmount = currentAmountOfResource - BigInt(quantity) * 1000n;
 
-			console.debug('Selling', {quantity, currentAmountOfResource, newAmount, totalPrice});
+			console.debug('Selling', { quantity, currentAmountOfResource, newAmount, totalPrice });
 			await prisma.resources.update({
 				where: { playerId: user.id },
 				data: {
@@ -99,6 +99,34 @@ export const MarketRepository = () => ({
 					gold: (user.Resources?.gold ?? 0n) + BigInt(totalPrice)
 				}
 			});
-		})
+		});
 	},
+	buyResources: async (userEmail: string, resourceType: EnumResource, quantity: number) => {
+		return prisma.$transaction(async () => {
+			const price = await prisma.resourcePrice.findUnique({
+				where: { resource: resourceType }
+			});
+			if (!price) throw new Error('Resource not found');
+			const user = await prisma.player.findUnique({
+				where: { email: userEmail },
+				include: { Resources: true }
+			});
+			if (!user) throw new Error('User not found');
+			const totalPrice = (price.price + 100) * quantity;
+			if (user.Resources?.gold && user.Resources.gold < BigInt(totalPrice))
+				throw new Error('Not enough gold');
+			const currentAmountOfResource =
+				user.Resources?.[
+					resourceType.toLowerCase() as 'wood' | 'marble' | 'sulfur' | 'crystal' | 'wine'
+				] || BigInt(0);
+			const newAmount = currentAmountOfResource + BigInt(quantity) * 1000n;
+			await prisma.resources.update({
+				where: { playerId: user.id },
+				data: {
+					[resourceType.toLowerCase()]: newAmount,
+					gold: (user.Resources?.gold ?? 0n) - BigInt(totalPrice)
+				}
+			});
+		});
+	}
 });

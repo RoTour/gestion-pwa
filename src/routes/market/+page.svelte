@@ -8,6 +8,7 @@
 	import type { EnumResource } from '@prisma/client';
 	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 	import { invalidate } from '$app/navigation';
+	import GoldAmount from '$lib/components/GoldAmount.svelte';
 
 	export let data: PageServerData;
 	const order = ['WOOD', 'MARBLE', 'SULFUR', 'WINE', 'CRYSTAL'];
@@ -47,11 +48,27 @@
 		try {
 			const res = await fetch(`/api/market/sell`, {
 				method: 'POST',
-				body: JSON.stringify({ resource, quantity }),
+				body: JSON.stringify({ resource, quantity })
 			});
 			const data = await res.json();
 			console.log(data);
-			await invalidate('refresh:user')
+			await invalidate('refresh:user');
+		} catch (e) {
+			console.error(e);
+		}
+		appIsLoading.set(false);
+	};
+
+	const buy = async (resource: EnumResource, quantity: number) => {
+		appIsLoading.set(true);
+		try {
+			const res = await fetch(`/api/market/buy`, {
+				method: 'POST',
+				body: JSON.stringify({ resource, quantity })
+			});
+			const data = await res.json();
+			console.log(data);
+			await invalidate('refresh:user');
 		} catch (e) {
 			console.error(e);
 		}
@@ -59,7 +76,8 @@
 	};
 </script>
 
-<div class="flex pb-4">
+<GoldAmount />
+<div class="flex py-4">
 	<Button
 		on:click={() => (action = 'buy')}
 		className="flex-1 {action === 'buy'
@@ -76,37 +94,42 @@
 
 <div class="divide-y-2">
 	{#each prices as { price, resource }}
+		{@const buyPrice = price + 100}
 		<div class="flex items-center px-4">
 			<ResourceIcon type={formatResource(resource)} />
 			<p class={'mr-2'}>:</p>
 
 			<div class="flex items-center w-16 justify-end">
-				<div class="">{formatPrice(price)}</div>
+				<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
 				<ResourceIcon type={'gold'} className={'p-1 h-10 w-10'} />
 			</div>
 
 			{#if action === 'buy'}
 				<div class="ml-auto flex gap-4">
 					<Button
-						disabled={price * 1 > playerGold}
-						className="rounded-lg text-xs {price * 1 > playerGold ? 'bg-gray-300' : ''}"
+						on:click={() => buy(resource, 1)}
+						disabled={buyPrice * 1 > playerGold}
+						className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
 					>
 						1
 					</Button>
 					<Button
-						disabled={price * 10 > playerGold}
-						className="rounded-lg text-xs {price * 10 > playerGold ? 'bg-gray-300' : ''}"
+						on:click={() => buy(resource, 10)}
+						disabled={buyPrice * 10 > playerGold}
+						className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
 					>
 						10
 					</Button>
 					<Button
-						disabled={price * 100 > playerGold}
-						className="rounded-lg text-xs {price * 100 > playerGold ? 'bg-gray-300' : ''}"
+						on:click={() => buy(resource, 100)}
+						disabled={buyPrice * 100 > playerGold}
+						className="rounded-lg text-xs {buyPrice * 100 > playerGold ? 'bg-gray-300' : ''}"
 					>
 						100
 					</Button>
 				</div>
 			{:else}
+				<!-- Selling -->
 				<div class="ml-auto flex gap-4">
 					<Button
 						on:click={() => sell(resource, 1)}
