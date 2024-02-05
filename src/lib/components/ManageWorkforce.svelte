@@ -5,7 +5,7 @@
 	import ResourceIcon from './ResourceIcon.svelte';
 
 	export let resourceType: IconType = 'wood';
-	export let resourceAmount: number = 0;
+	export let resourceAmount: bigint = 0n;
 
 	export let workforce = 0;
 	let initialWorkforce = workforce;

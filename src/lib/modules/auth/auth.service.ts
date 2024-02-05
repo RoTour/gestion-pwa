@@ -9,7 +9,7 @@ export const authRepository = () => ({
 		const { data, error } = await supabase.auth.signUp({
 			email,
 			password,
-			options: { emailRedirectTo: 'https://gestion-pwa.vercel.app/auth/login ' }
+			options: { emailRedirectTo: 'https://gestion-pwa.vercel.app/auth/login' }
 		});
 		if (error) throw new AppError(500, error.message);
 		if (!data || !data.user) {
