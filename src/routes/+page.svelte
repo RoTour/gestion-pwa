@@ -72,7 +72,6 @@
 	};
 
 	const saveChanges = async () => {
-		console.debug('Saving changes');
 		return await handleSubmit().then((after) => {
 			touched = false;
 			return after;
@@ -84,9 +83,7 @@
 		initWorkforces(player.Workforces);
 	};
 
-	$: console.debug({ touched });
 	$: if ($page.form?.player) {
-		console.debug('initValues form', $page.form.player);
 		initValues($page.form.player);
 		initWorkforces($page.form.player.Workforces ?? []);
 		touchedWorkforces = {

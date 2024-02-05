@@ -18,13 +18,12 @@
 	};
 
 	$: if ($page.data.user) {
-		console.debug('Setting player resources', $page.data.user.Resources);
 		playerResources.set($page.data.user.Resources);
 	}
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 6.1.1</p>
+	<p>AppVersion: 6.2.0</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}

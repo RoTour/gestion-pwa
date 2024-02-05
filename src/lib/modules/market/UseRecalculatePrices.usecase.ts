@@ -1,4 +1,5 @@
 import { prisma } from '$lib/clients/prisma';
+import type { EnumResource } from '@prisma/client';
 import { MarketRepository } from './Market.repository';
 
 // export const UseRecalculatePrices = () => ({
@@ -50,7 +51,13 @@ const isOlderThanOneHour = (date: Date) => date < new Date(Date.now() - 60 * 60 
 
 // The prices should be updated every 1 hour, by randomly incresing or decreasing the price by 200, and the price should be between 200 and 5000
 export const UseRecalculatePrices = () => ({
-	execute: async () => {
+	execute: async (): Promise<
+		{
+			resource: EnumResource;
+			price: number;
+			updatedAt: Date;
+		}[]
+	> => {
 		const repository = MarketRepository();
 		let currentPrices = await repository.getPrices();
 		if (!currentPrices.length) {
@@ -64,22 +71,19 @@ export const UseRecalculatePrices = () => ({
 			currentPrices = await repository.getPrices();
 			return currentPrices;
 		}
+		if (currentPrices.length === 0) return [];
+		if (!isOlderThanOneHour(currentPrices[0].updatedAt)) return currentPrices;
+
 		return prisma.$transaction(async () => {
 			const newPrices = currentPrices.map((currentPrice) => {
-				if (isOlderThanOneHour(currentPrice.updatedAt)) {
-					let newPrice = currentPrice.price + Math.floor(Math.random() * 400) - 200;
-					newPrice = Math.max(200, Math.min(newPrice, 3000));
-					return { resource: currentPrice.resource, price: newPrice, updatedAt: new Date()};
-				}
-				console.debug('Price was updated less than 1 hour ago, not updating', {currentPrice});
-				return { resource: currentPrice.resource, price: currentPrice.price, updatedAt: currentPrice.updatedAt};
+				const newPrice = currentPrice.price + Math.round(Math.random() * 400 - 200);
+				return {
+					resource: currentPrice.resource,
+					price: Math.max(200, Math.min(newPrice, 5000)),
+					updatedAt: new Date(),
+				};
 			});
-			console.debug({newPrices})
-
-			const toBeUpdated = newPrices.filter((price) => price.updatedAt < new Date(Date.now() - 60 * 60 * 1000))
-			console.debug({toBeUpdated})
-			await repository.updatePrices(toBeUpdated);
-
+			await repository.updatePrices(newPrices);
 			return newPrices;
 		});
 	}

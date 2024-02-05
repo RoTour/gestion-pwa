@@ -91,7 +91,6 @@ export const MarketRepository = () => ({
 
 			const newAmount = currentAmountOfResource - BigInt(quantity) * 1000n;
 
-			console.debug('Selling', { quantity, currentAmountOfResource, newAmount, totalPrice });
 			await prisma.resources.update({
 				where: { playerId: user.id },
 				data: {

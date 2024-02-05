@@ -31,11 +31,11 @@
 				CRYSTAL: BigInt(value?.crystal || 0)
 			};
 			playerGold = BigInt(value?.gold || 0);
-			console.debug('Setting player resources', value);
 		});
 	});
 
 	$: prices = data.prices.sort((a, b) => order.indexOf(a.resource) - order.indexOf(b.resource));
+	$: lastUpdate = (data.prices[0]?.updatedAt ?? new Date()).toLocaleTimeString();
 	const formatPrice = (price: number) => {
 		return Math.floor(price / 100);
 	};
@@ -77,16 +77,17 @@
 </script>
 
 <GoldAmount />
+
 <div class="flex py-4">
 	<Button
-		on:click={() => (action = 'buy')}
-		className="flex-1 {action === 'buy'
+	on:click={() => (action = 'buy')}
+	className="flex-1 {action === 'buy'
 			? 'bg-emerald-300'
 			: 'bg-white border-2 border-emerald-300 border-b-0'}">Acheter</Button
 	>
 	<Button
-		on:click={() => (action = 'sell')}
-		className="flex-1 {action === 'sell'
+	on:click={() => (action = 'sell')}
+	className="flex-1 {action === 'sell'
 			? 'bg-red-300'
 			: 'bg-white border-2 border-red-300 border-b-0'}">Vendre</Button
 	>
@@ -94,53 +95,53 @@
 
 <div class="divide-y-2">
 	{#each prices as { price, resource }}
-		{@const buyPrice = price + 100}
-		<div class="flex items-center px-4">
-			<ResourceIcon type={formatResource(resource)} />
-			<p class={'mr-2'}>:</p>
-
-			<div class="flex items-center w-16 justify-end">
-				<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
-				<ResourceIcon type={'gold'} className={'p-1 h-10 w-10'} />
-			</div>
-
-			{#if action === 'buy'}
-				<div class="ml-auto flex gap-4">
-					<Button
-						on:click={() => buy(resource, 1)}
-						disabled={buyPrice * 1 > playerGold}
-						className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
-					>
-						1
-					</Button>
-					<Button
-						on:click={() => buy(resource, 10)}
-						disabled={buyPrice * 10 > playerGold}
-						className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
-					>
-						10
-					</Button>
+	{@const buyPrice = price + 100}
+	<div class="flex items-center px-4">
+		<ResourceIcon type={formatResource(resource)} />
+		<p class={'mr-2'}>:</p>
+		
+		<div class="flex items-center w-16 justify-end">
+			<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
+			<ResourceIcon type={'gold'} className={'p-1 h-10 w-10'} />
+		</div>
+		
+		{#if action === 'buy'}
+		<div class="ml-auto flex gap-4">
+			<Button
+			on:click={() => buy(resource, 1)}
+			disabled={buyPrice * 1 > playerGold}
+			className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
+			>
+			1
+		</Button>
+		<Button
+		on:click={() => buy(resource, 10)}
+		disabled={buyPrice * 10 > playerGold}
+		className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
+		>
+		10
+	</Button>
 					<Button
 						on:click={() => buy(resource, 100)}
 						disabled={buyPrice * 100 > playerGold}
 						className="rounded-lg text-xs {buyPrice * 100 > playerGold ? 'bg-gray-300' : ''}"
-					>
+						>
 						100
 					</Button>
 				</div>
 			{:else}
-				<!-- Selling -->
-				<div class="ml-auto flex gap-4">
-					<Button
-						on:click={() => sell(resource, 1)}
-						disabled={ressourcesAvailable[resource] / 1000n < 1n}
-						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 1n
+			<!-- Selling -->
+			<div class="ml-auto flex gap-4">
+				<Button
+				on:click={() => sell(resource, 1)}
+				disabled={ressourcesAvailable[resource] / 1000n < 1n}
+				className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 1n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">1</Button
 					>
 					<Button
-						on:click={() => sell(resource, 10)}
-						disabled={ressourcesAvailable[resource] / 1000n < 10n}
+					on:click={() => sell(resource, 10)}
+					disabled={ressourcesAvailable[resource] / 1000n < 10n}
 						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 10n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">10</Button
@@ -157,3 +158,4 @@
 		</div>
 	{/each}
 </div>
+<p class="text-xs">Dernière mise à jour: {lastUpdate}</p>
