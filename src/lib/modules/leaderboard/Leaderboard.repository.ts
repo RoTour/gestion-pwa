@@ -1,4 +1,5 @@
 import { prisma } from '$lib/clients/prisma';
+import type { Resources } from '@prisma/client';
 
 export type Ranking = {
 	username: string,
@@ -10,10 +11,11 @@ export const LeaderboardRepository = () => ({
 		// Fetch resource prices and map them for easy lookup
 		const resourcePrices = await prisma.resourcePrice.findMany();
 		const priceMap = resourcePrices.reduce((acc, cur) => {
-			acc[cur.resource] = cur.price;
+			acc[cur.resource.toLowerCase()] = cur.price;
 			return acc;
 		}, {} as Record<string, number>);
-	
+		
+		console.debug({ priceMap });
 		// Fetch players with their resources
 		const players = await prisma.player.findMany({
 			include: {
@@ -24,25 +26,19 @@ export const LeaderboardRepository = () => ({
 	
 		// Calculate wealth for each player
 		const playerWealths = players.map(player => {
-			const resourcesWealth = Object.entries(player.Resources || {}).reduce((total, [key, value]) => {
-				if (key in priceMap && value instanceof BigInt) {
-					// Convert BigInt to number for multiplication (may lose precision with very large numbers)
-					return total + priceMap[key] * Number(value);
-				}
-				return total;
+			const gold = player.Resources?.gold || 0;
+			const resources: (keyof Resources)[] = ['wood', 'marble', 'sulfur', 'crystal', 'wine'];
+			const resourceWealth = resources.reduce((acc, cur) => {
+				const price = priceMap[cur];
+				const amount: bigint = (player.Resources?.[cur] as bigint) / 1000n || 0n;
+				console.debug({ name: player.name, price, amount, resource: cur, wealth: price * Number(amount)});
+				return acc + price * Number(amount);
 			}, 0);
-	
-			const workforcesWealth = player.Workforces.reduce((total, workforce) => {
-				return total + (priceMap[workforce.resource] * workforce.amount);
-			}, 0);
-	
-			const totalWealth = Number(player.Resources?.gold || 0) + resourcesWealth + workforcesWealth;
+			const total = Number(gold) + resourceWealth;
 			return {
-				playerId: player.id,
-				email: player.email,
 				username: player.name,
-				wealth: totalWealth,
-			};
+				wealth: total,
+			}
 		});
 	
 		// Sort by wealth in descending order

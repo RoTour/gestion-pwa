@@ -15,7 +15,7 @@
 
   // Replace with K, M, B, T, etc.
   const formatNumbers = (number: number) => {
-    const golds = number/100
+    const golds = Math.floor(number/100);
     if (golds < 1e3) return golds;
     if (golds >= 1e3 && golds < 1e6) return +(golds / 1e3).toFixed(1) + "K";
     if (golds >= 1e6 && golds < 1e9) return +(golds / 1e6).toFixed(1) + "M";
