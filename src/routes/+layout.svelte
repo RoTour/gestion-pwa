@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { dev } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { navigating, page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';
 	import Loader from '$lib/components/Loader.svelte';
 	import { appIsLoading } from '$lib/stores/appIsLoading.store';
-	import { dev } from '$app/environment';
+	import { playerResources } from '$lib/stores/playerInfos.store';
 	import { inject } from '@vercel/analytics';
 	import '../app.css';
-	import { playerResources } from '$lib/stores/playerInfos.store';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -23,7 +23,7 @@
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 6.2.0</p>
+	<p>AppVersion: 6.3.0</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}
@@ -37,18 +37,27 @@
 {#if !isAuthPage}
 	<nav class="flex gap-2 text-center bg-emerald-300 pt-2 pb-0 fixed z-10 bottom-0 w-full">
 		<a href="/" class="flex-1 bg-white">
-			<div class="h-16 flex items-center justify-center">
+			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="home.png" alt="Home" />
+				<p class="-mt-2 text-xs font-thin">Home</p>
 			</div>
 		</a>
 		<a href="/market" class="flex-1 bg-white">
-			<div class="h-16 flex items-center justify-center">
+			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="market.png" alt="Market" />
+				<p class="-mt-2 text-xs font-thin">Market</p>
 			</div>
 		</a>
 		<a href="/buildings" class="flex-1 bg-white pointer-events-none grayscale">
-			<div class="h-16 flex items-center justify-center">
+			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="buildings.png" alt="Market" />
+				<p class="-mt-2 text-xs font-thin">Buildings</p>
+			</div>
+		</a>
+		<a href="/leaderboard" class="flex-1 bg-white">
+			<div class="h-16 flex flex-col items-center justify-center">
+				<img class="aspect-square h-14 inline-block" src="podium.png" alt="Leaderboard" />
+				<p class="-mt-2 text-xs font-thin">Leaderboard</p>
 			</div>
 		</a>
 	</nav>
