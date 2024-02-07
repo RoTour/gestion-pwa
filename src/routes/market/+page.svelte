@@ -1,14 +1,15 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
+	import GoldAmount from '$lib/components/GoldAmount.svelte';
 	import ResourceIcon from '$lib/components/ResourceIcon.svelte';
+	import { formatResources, getResourceFromEnum } from '$lib/helpers/resources.helper';
+	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 	import { playerResources } from '$lib/stores/playerInfos.store';
+	import type { EnumResource } from '@prisma/client';
 	import { onMount } from 'svelte';
 	import type { IconType } from '../../models/IconType';
 	import type { PageServerData } from './$types';
-	import type { EnumResource } from '@prisma/client';
-	import { appIsLoading } from '$lib/stores/appIsLoading.store';
-	import { invalidate } from '$app/navigation';
-	import GoldAmount from '$lib/components/GoldAmount.svelte';
 
 	export let data: PageServerData;
 	const order = ['WOOD', 'MARBLE', 'SULFUR', 'WINE', 'CRYSTAL'];
@@ -80,14 +81,14 @@
 
 <div class="flex py-4">
 	<Button
-	on:click={() => (action = 'buy')}
-	className="flex-1 {action === 'buy'
+		on:click={() => (action = 'buy')}
+		className="flex-1 {action === 'buy'
 			? 'bg-emerald-300'
 			: 'bg-white border-2 border-emerald-300 border-b-0'}">Acheter</Button
 	>
 	<Button
-	on:click={() => (action = 'sell')}
-	className="flex-1 {action === 'sell'
+		on:click={() => (action = 'sell')}
+		className="flex-1 {action === 'sell'
 			? 'bg-red-300'
 			: 'bg-white border-2 border-red-300 border-b-0'}">Vendre</Button
 	>
@@ -95,53 +96,60 @@
 
 <div class="divide-y-2">
 	{#each prices as { price, resource }}
-	{@const buyPrice = price + 100}
-	<div class="flex items-center px-4">
-		<ResourceIcon type={formatResource(resource)} />
-		<p class={'mr-2'}>:</p>
-		
-		<div class="flex items-center w-16 justify-end">
-			<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
-			<ResourceIcon type={'gold'} className={'p-1 h-10 w-10'} />
-		</div>
-		
-		{#if action === 'buy'}
-		<div class="ml-auto flex gap-4">
-			<Button
-			on:click={() => buy(resource, 1)}
-			disabled={buyPrice * 1 > playerGold}
-			className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
-			>
-			1
-		</Button>
-		<Button
-		on:click={() => buy(resource, 10)}
-		disabled={buyPrice * 10 > playerGold}
-		className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
-		>
-		10
-	</Button>
+		{@const buyPrice = price + 100}
+		<div class="flex items-center px-4">
+			<ResourceIcon type={formatResource(resource)} />
+			<div class="flex flex-col leading-4">
+				<div class="flex items-center w-16 font-bold">
+					<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
+					<ResourceIcon type={'gold'} className={' h-4 w-4'} />
+					<p class="text-xs">/u</p>
+				</div>
+				<div class="flex items-baseline gap-1">
+					<p class="text-sm">In stock:</p>
+					<p class="sm">
+						{formatResources(getResourceFromEnum(resource, $playerResources))}
+					</p>
+				</div>
+			</div>
+
+			{#if action === 'buy'}
+				<div class="ml-auto flex gap-4">
+					<Button
+						on:click={() => buy(resource, 1)}
+						disabled={buyPrice * 1 > playerGold}
+						className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
+					>
+						1
+					</Button>
+					<Button
+						on:click={() => buy(resource, 10)}
+						disabled={buyPrice * 10 > playerGold}
+						className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
+					>
+						10
+					</Button>
 					<Button
 						on:click={() => buy(resource, 100)}
 						disabled={buyPrice * 100 > playerGold}
 						className="rounded-lg text-xs {buyPrice * 100 > playerGold ? 'bg-gray-300' : ''}"
-						>
+					>
 						100
 					</Button>
 				</div>
 			{:else}
-			<!-- Selling -->
-			<div class="ml-auto flex gap-4">
-				<Button
-				on:click={() => sell(resource, 1)}
-				disabled={ressourcesAvailable[resource] / 1000n < 1n}
-				className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 1n
+				<!-- Selling -->
+				<div class="ml-auto flex gap-4">
+					<Button
+						on:click={() => sell(resource, 1)}
+						disabled={ressourcesAvailable[resource] / 1000n < 1n}
+						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 1n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">1</Button
 					>
 					<Button
-					on:click={() => sell(resource, 10)}
-					disabled={ressourcesAvailable[resource] / 1000n < 10n}
+						on:click={() => sell(resource, 10)}
+						disabled={ressourcesAvailable[resource] / 1000n < 10n}
 						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 10n
 							? 'bg-gray-300'
 							: 'bg-red-300'}">10</Button

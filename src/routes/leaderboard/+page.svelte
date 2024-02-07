@@ -1,5 +1,6 @@
 <script lang="ts">
 	import ResourceIcon from "$lib/components/ResourceIcon.svelte";
+	import { formatGold } from "$lib/helpers/resources.helper";
 	import type { PageServerData } from "./$types";
 
   export let data: PageServerData;
@@ -12,15 +13,6 @@
     2: secondPlaceStyle,
     3: thirdPlaceStyle,
   }
-
-  // Replace with K, M, B, T, etc.
-  const formatNumbers = (number: number) => {
-    const golds = Math.floor(number/100);
-    if (golds < 1e3) return golds;
-    if (golds >= 1e3 && golds < 1e6) return +(golds / 1e3).toFixed(1) + "K";
-    if (golds >= 1e6 && golds < 1e9) return +(golds / 1e6).toFixed(1) + "M";
-    if (golds >= 1e9 && golds < 1e12) return +(golds / 1e9).toFixed(1) + "B";
-  };
 
   const getPlaces = (place: number) => {
     return places[place as 1 | 2 | 3] ?? otherPlaceStyle;
@@ -35,7 +27,7 @@
     <div class="flex items-center p-2 {getPlaces(i+1)}">
       <p class="w-12">#{i + 1}</p>
       <p>{player.username}</p>
-      <p class="ml-auto">{formatNumbers(player.wealth)}</p>
+      <p class="ml-auto">{formatGold(player.wealth)}</p>
       <ResourceIcon type="gold" className="w-6 h-6 ml-2 -mt-1" />
     </div>
   {/each}
