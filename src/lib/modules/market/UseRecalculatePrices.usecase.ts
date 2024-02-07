@@ -76,11 +76,13 @@ export const UseRecalculatePrices = () => ({
 
 		return prisma.$transaction(async () => {
 			const newPrices = currentPrices.map((currentPrice) => {
-				const newPrice = currentPrice.price + Math.round(Math.random() * 400 - 200);
+				const variation = 3;
+				const newPrice =
+					currentPrice.price + Math.round(Math.random() * variation * 2 * 100 - variation * 100);
 				return {
 					resource: currentPrice.resource,
 					price: Math.max(200, Math.min(newPrice, 5000)),
-					updatedAt: new Date(),
+					updatedAt: new Date()
 				};
 			});
 			await repository.updatePrices(newPrices);
