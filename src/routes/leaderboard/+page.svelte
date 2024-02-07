@@ -30,9 +30,9 @@
 
 </script>
 
-<div class="flex flex-col gap-4 p-4">
+<div class="flex flex-col p-4 divide-y-2">
   {#each ranking as player, i}
-    <div class="flex items-center {getPlaces(i+1)}">
+    <div class="flex items-center p-2 {getPlaces(i+1)}">
       <p class="w-12">#{i + 1}</p>
       <p>{player.username}</p>
       <p class="ml-auto">{formatNumbers(player.wealth)}</p>

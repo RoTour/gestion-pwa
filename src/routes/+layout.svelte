@@ -39,25 +39,25 @@
 		<a href="/" class="flex-1 bg-white">
 			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="home.png" alt="Home" />
-				<p class="-mt-2 text-xs font-thin">Home</p>
+				<p class="-mt-2 pb-2 text-xs font-light">Home</p>
 			</div>
 		</a>
 		<a href="/market" class="flex-1 bg-white">
 			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="market.png" alt="Market" />
-				<p class="-mt-2 text-xs font-thin">Market</p>
+				<p class="-mt-2 pb-2 text-xs font-light">Market</p>
 			</div>
 		</a>
 		<a href="/buildings" class="flex-1 bg-white pointer-events-none grayscale">
 			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="buildings.png" alt="Market" />
-				<p class="-mt-2 text-xs font-thin">Buildings</p>
+				<p class="-mt-2 pb-2 text-xs font-light">Buildings</p>
 			</div>
 		</a>
 		<a href="/leaderboard" class="flex-1 bg-white">
 			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="podium.png" alt="Leaderboard" />
-				<p class="-mt-2 text-xs font-thin">Leaderboard</p>
+				<p class="-mt-2 pb-2 text-xs font-light">Leaderboard</p>
 			</div>
 		</a>
 	</nav>
