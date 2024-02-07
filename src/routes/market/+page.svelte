@@ -102,12 +102,12 @@
 			<div class="flex flex-col leading-4">
 				<div class="flex items-center w-16 font-bold">
 					<div class="">{action === 'buy' ? formatPrice(buyPrice) : formatPrice(price)}</div>
-					<ResourceIcon type={'gold'} className={' h-4 w-4'} />
+					<ResourceIcon type={'gold'} className={'mb-1 h-4 w-4'} />
 					<p class="text-xs">/u</p>
 				</div>
 				<div class="flex items-baseline gap-1">
 					<p class="text-sm">In stock:</p>
-					<p class="sm">
+					<p class="text-sm">
 						{formatResources(getResourceFromEnum(resource, $playerResources))}
 					</p>
 				</div>
@@ -167,3 +167,11 @@
 	{/each}
 </div>
 <p class="text-xs">Dernière mise à jour: {lastUpdate}</p>
+<div class="w-fit ml-auto px-4">
+	<div>
+		<a href="/market/history" class="flex flex-col items-center justify-center">
+			<img src="history.png" alt="History" class="w-16 h-16" />
+			<p class="text-sm leading-4 -mt-1">History</p>
+		</a>
+	</div>
+</div>

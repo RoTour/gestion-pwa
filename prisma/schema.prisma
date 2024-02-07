@@ -18,6 +18,11 @@ enum EnumResource {
   CRYSTAL
 }
 
+enum EnumTransactionType {
+  BUY
+  SELL
+}
+
 model Player {
   id          String @id @default(uuid())
   email       String @unique
@@ -26,6 +31,7 @@ model Player {
 
   Resources  Resources?
   Workforces Workforce[]
+  Transactions Transaction[]
 }
 
 model Resources {
@@ -60,4 +66,17 @@ model ResourcePrice {
   price    Int          @default(50)
 
   updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Transaction {
+  id String @id @default(uuid())
+  resource EnumResource
+  amount   Int
+  price    Int
+  type     EnumTransactionType
+  date     DateTime @default(now())
+  
+  // Relations
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
 }

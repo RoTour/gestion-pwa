@@ -1,5 +1,5 @@
 import { prisma } from '$lib/clients/prisma';
-import type { EnumResource } from '@prisma/client';
+import { EnumTransactionType, type EnumResource } from '@prisma/client';
 import type { TotalResourceAmount } from './entities/TotalResourceAmount';
 
 type PriceGenerationParams = {
@@ -98,10 +98,19 @@ export const MarketRepository = () => ({
 					gold: (user.Resources?.gold ?? 0n) + BigInt(totalPrice)
 				}
 			});
+			await prisma.transaction.create({
+				data: {
+					playerId: user.id,
+					amount: quantity,
+					resource: resourceType,
+					type: EnumTransactionType.SELL,
+					price: price.price,
+				}
+			})
 		});
 	},
 	buyResources: async (userEmail: string, resourceType: EnumResource, quantity: number) => {
-		return prisma.$transaction(async () => {
+		return prisma.$transaction(async (prisma) => {
 			const price = await prisma.resourcePrice.findUnique({
 				where: { resource: resourceType }
 			});
@@ -126,6 +135,37 @@ export const MarketRepository = () => ({
 					gold: (user.Resources?.gold ?? 0n) - BigInt(totalPrice)
 				}
 			});
+			await prisma.transaction.create({
+				data: {
+					playerId: user.id,
+					amount: quantity,
+					resource: resourceType,
+					type: EnumTransactionType.BUY,
+					price: price.price,
+				}
+			})
 		});
-	}
+	},
+	getTransactionHistory: async (userEmail: string) => {
+		return prisma.$transaction(async (prisma) => {
+			const user = await prisma.player.findUnique({
+				where: { email: userEmail }
+			});
+			if (!user) return [];
+			const transactions = await prisma.transaction.findMany({
+				where: { player: { email: userEmail } },
+				orderBy: { date: 'desc' }
+			});
+			return transactions.map((transaction) => {
+				return {
+					username: user.name,
+					resource: transaction.resource,
+					amount: transaction.amount,
+					price: transaction.price,
+					type: transaction.type,
+					date: transaction.date
+				};
+			});
+		});
+	},
 });
