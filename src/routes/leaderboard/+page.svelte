@@ -22,13 +22,17 @@
     if (golds >= 1e9 && golds < 1e12) return +(golds / 1e9).toFixed(1) + "B";
   };
 
+  const getPlaces = (place: number) => {
+    return places[place as 1 | 2 | 3] ?? otherPlaceStyle;
+  }
+
   $: ranking = data.ranking.filter(player => player.wealth > 0);
 
 </script>
 
 <div class="flex flex-col gap-4 p-4">
   {#each ranking as player, i}
-    <div class="flex items-center {places[i+1] ?? otherPlaceStyle}">
+    <div class="flex items-center {getPlaces(i+1)}">
       <p class="w-12">#{i + 1}</p>
       <p>{player.username}</p>
       <p class="ml-auto">{formatNumbers(player.wealth)}</p>
