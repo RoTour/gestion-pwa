@@ -16,8 +16,7 @@
 		| 'wine'
 		| 'gold';
   $: resourceName = resource.at(0) + [...resource].slice(1).join('').toLowerCase();
-  $: displayedPrice = formatGold(price * amount);
-  $: displayerUnitPrice = formatGold(price);
+  $: displayerUnitPrice = formatGold(price + (type === 'BUY' ? 100 : 0));
 </script>
 
 <div class="flex gap-2 px-4 py-2 {color} items-center">
