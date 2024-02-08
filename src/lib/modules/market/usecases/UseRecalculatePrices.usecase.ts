@@ -1,6 +1,6 @@
 import { prisma } from '$lib/clients/prisma';
 import type { EnumResource } from '@prisma/client';
-import { MarketRepository } from './Market.repository';
+import { MarketRepository } from '../Market.repository';
 
 // export const UseRecalculatePrices = () => ({
 // 	execute: async () => {

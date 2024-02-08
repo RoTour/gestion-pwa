@@ -1,4 +1,4 @@
-import { UseRecalculatePrices } from '$lib/modules/market/UseRecalculatePrices.usecase';
+import { UseRecalculatePrices } from '$lib/modules/market/usecases/UseRecalculatePrices.usecase';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {

@@ -1,22 +1,17 @@
 import { MarketRepository } from '$lib/modules/market/Market.repository';
+import type { TransactionRecord } from '$lib/modules/market/dto/TransactionRecord.dto';
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-
-export type TransactionHistory = {
-	username: string;
-	resource: 'WOOD' | 'MARBLE' | 'SULFUR' | 'CRYSTAL' | 'WINE' | 'GOLD';
-	amount: number;
-	price: number;
-	type: 'BUY' | 'SELL';
-	date: Date;
-};
+import { UseGroupTransactions } from '$lib/modules/market/usecases/UseGroupTransactions.usecase';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = locals.user;
-	if (!user) return {};
+	if (!user) throw redirect(301, '/auth/login');
 
-	const history: TransactionHistory[] = await MarketRepository().getTransactionHistory(user.email ?? '');
+	const allRecords: TransactionRecord[] = await MarketRepository().getTransactionHistory(user.email ?? '');
+	const records = UseGroupTransactions().execut(allRecords);
 
 	return {
-		history
+		records
 	};
 };
