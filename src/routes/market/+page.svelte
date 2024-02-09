@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import type { IconType } from '../../models/IconType';
 	import type { PageServerData } from './$types';
+	import { page } from '$app/stores';
 
 	export let data: PageServerData;
 	const order = ['WOOD', 'MARBLE', 'SULFUR', 'WINE', 'CRYSTAL'];
@@ -54,6 +55,7 @@
 			const data = await res.json();
 			console.log(data);
 			await invalidate('refresh:user');
+			playerResources.set($page.data.user.Resources);
 		} catch (e) {
 			console.error(e);
 		}
@@ -70,6 +72,7 @@
 			const data = await res.json();
 			console.log(data);
 			await invalidate('refresh:user');
+			playerResources.set($page.data.user.Resources);
 		} catch (e) {
 			console.error(e);
 		}
