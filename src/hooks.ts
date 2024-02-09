@@ -4,6 +4,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const checkAuth: Handle = async ({ event, resolve }) => {
+	if (event.url.pathname.includes('/api/public/')) return resolve(event);
 	const authCookie = event.cookies.get(COOKEYS.authToken) || '';
 	console.debug('checkAuth', 'authCookie', event.url.pathname);
 	if (!authCookie && !event.url.pathname.includes('/auth/')) {
