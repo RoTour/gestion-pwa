@@ -23,15 +23,23 @@ enum EnumTransactionType {
   SELL
 }
 
+enum EnumUpgradeType {
+  PSV_INC
+  PROD_BOOST
+  MORE_PPL
+  EQL_PRICES
+}
+
 model Player {
   id          String @id @default(uuid())
   email       String @unique
   name        String
   maxCitizens Int    @default(50)
 
-  Resources  Resources?
-  Workforces Workforce[]
+  Resources    Resources?
+  Workforces   Workforce[]
   Transactions Transaction[]
+  Upgrades     Upgrade[]
 }
 
 model Resources {
@@ -69,14 +77,23 @@ model ResourcePrice {
 }
 
 model Transaction {
-  id String @id @default(uuid())
+  id       String              @id @default(uuid())
   resource EnumResource
   amount   Int
   price    Int
   type     EnumTransactionType
-  date     DateTime @default(now())
-  
+  date     DateTime            @default(now())
+
   // Relations
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+}
+
+model Upgrade {
+  id    String      @id @default(uuid())
+  level Int        @default(0)
+  type  EnumUpgradeType
+
   player   Player @relation(fields: [playerId], references: [id])
   playerId String
 }

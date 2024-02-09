@@ -1,8 +1,10 @@
 import { DashboardRepository } from '$lib/modules/dashboard/dashboard.repository';
+import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
+import type { Upgrade } from '@prisma/client';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({locals, fetch}) => {
+export const load: PageServerLoad = async ({ locals, fetch }) => {
 	const user = locals.user;
 	if (!user) {
 		throw redirect(303, '/auth/login');
@@ -12,17 +14,25 @@ export const load: PageServerLoad = async ({locals, fetch}) => {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
-		},
+		}
 	});
 
 	const player = await DashboardRepository().getPlayerFromEmail(user?.email || '');
 	if (!player) {
 		throw redirect(303, '/auth/login');
 	}
+	const townHallLevel =
+		player.Upgrades.find((upgrade: Upgrade) => upgrade.type === 'MORE_PPL')?.level || 0;
+	const maxCitizens: number = UpgradesBoosts.MORE_PPL[townHallLevel]?.value ?? player.maxCitizens;
+
+	const citizenAvailable: number =
+		maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0);
+	console.debug({ townHallLevel, maxCitizens, citizenAvailable });
+
 	return {
 		player,
-		citizenAvailable:
-			player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0)
+		maxCitizens,
+		citizenAvailable
 	};
 };
 

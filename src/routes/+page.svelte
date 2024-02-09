@@ -17,6 +17,7 @@
 	import type { Resources, Workforce } from '@prisma/client';
 	import type { PageData } from './$types';
 	import GoldAmount from '$lib/components/GoldAmount.svelte';
+	import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
 
 	export let data: PageData;
 	let player: typeof data.player;
@@ -56,13 +57,16 @@
 		playerResources.set(resources);
 		playerWorkforces.set(newValues.Workforces ?? []);
 		playerCitizensAvailable.set(data.citizenAvailable);
-		playerMaxCitizens.set(player.maxCitizens);
+		playerMaxCitizens.set(data.maxCitizens);
 	};
 
 	const initWorkforces = (newValues: Workforce[]) => {
-		playerCitizensAvailable.set(
-			player.maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0)
-		);
+		const townHallLevel =
+			player.Upgrades.find((upgrade) => upgrade.type === 'MORE_PPL')?.level || 0;
+
+		const maxCitizens: number = UpgradesBoosts.MORE_PPL[townHallLevel]?.value ?? player.maxCitizens;
+		const citizenAvailable: number = maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0);
+		playerCitizensAvailable.set(citizenAvailable);
 		workforces.wood = newValues?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
 		workforces.marble = newValues?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
 		workforces.sulfur = newValues?.find((c) => c.resource === 'SULFUR')?.amount ?? 0;

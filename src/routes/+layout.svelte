@@ -8,6 +8,7 @@
 	import { playerResources } from '$lib/stores/playerInfos.store';
 	import { inject } from '@vercel/analytics';
 	import '../app.css';
+	import { onMount } from 'svelte';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -17,13 +18,15 @@
 		goto('/auth/logout');
 	};
 
-	$: if ($page.data.user) {
-		playerResources.set($page.data.user.Resources);
-	}
+	onMount(() => {
+		if ($page.data.user) {
+			playerResources.set($page.data.user.Resources);
+		}
+	});
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 6.5.1</p>
+	<p>AppVersion: 7.0.0</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}
@@ -48,7 +51,7 @@
 				<p class="-mt-2 pb-2 text-xs font-light">Market</p>
 			</div>
 		</a>
-		<a href="/buildings" class="flex-1 bg-white pointer-events-none grayscale">
+		<a href="/upgrades" class="flex-1 bg-white">
 			<div class="h-16 flex flex-col items-center justify-center">
 				<img class="aspect-square h-14 inline-block" src="/buildings.png" alt="Market" />
 				<p class="-mt-2 pb-2 text-xs font-light">Buildings</p>

@@ -1,6 +1,6 @@
 import type { EnumResource, Resources } from '@prisma/client';
 
-export const getResourceFromEnum = (resourceType: EnumResource, resources?: Resources): bigint => {
+export const getResourceFromEnum = (resourceType: EnumResource | 'GOLD', resources?: Resources): bigint => {
 	if (!resources) return 0n;
 	const key = resourceType.toLowerCase() as 'wood' | 'wine' | 'marble' | 'sulfur' | 'crystal';
 	return resources[key];

@@ -4,19 +4,19 @@ export const DashboardRepository = () => ({
 	getPlayerFromEmail: async (email: string) => {
 		let user = await prisma.player.findUnique({
 			where: { email: email },
-			include: { Resources: true, Workforces: true }
+			include: { Resources: true, Workforces: true, Upgrades: true}
 		});
 		if (!user) {
 			await prisma.player.create({
 				data: {
 					email: email,
 					name: email.split('@')[0],
-					Resources: { create: { wood: 0, marble: 0, sulfur: 0, crystal: 0, wine: 0 } }
+					Resources: { create: { wood: 0, marble: 0, sulfur: 0, crystal: 0, wine: 0 } },
 				}
 			});
 			user = await prisma.player.findUnique({
 				where: { email: email },
-				include: { Resources: true, Workforces: true }
+				include: { Resources: true, Workforces: true, Upgrades: true }
 			});
 		}
 		return user;
