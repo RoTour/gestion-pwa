@@ -37,6 +37,8 @@
 		});
 	};
 
+	const removeTextInParentheses = (str: string) => str.replace(/\([^)]*\)/g, '');
+
 	const buyUpgrade = async () => {
 		appIsLoading.set(true);
 		errorMessage = '';
@@ -79,7 +81,7 @@
 
 	<p class="text-sm flex">
 		<span class="font-bold mr-1">Effet actuel: </span>
-		{@html insertIcons(currentBoost)}
+		{@html insertIcons(removeTextInParentheses(currentBoost))}
 	</p>
 
 	{#if nextLevelCosts && nextLevelCosts.length > 0}

@@ -26,7 +26,7 @@
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 7.0.1</p>
+	<p>AppVersion: 7.0.4</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}
