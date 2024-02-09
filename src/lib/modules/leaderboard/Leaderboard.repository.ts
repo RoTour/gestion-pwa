@@ -18,6 +18,9 @@ export const LeaderboardRepository = () => ({
 		console.debug({ priceMap });
 		// Fetch players with their resources
 		const players = await prisma.player.findMany({
+			where: {
+				devAccount: false,
+			},
 			include: {
 				Resources: true,
 				Workforces: true,
