@@ -47,7 +47,7 @@ import { MarketRepository } from '../Market.repository';
 // 	}
 // });
 
-const isOlderThanOneHour = (date: Date) => date < new Date(Date.now() - 60 * 60 * 1000);
+const isOlderThanOneHour = (date: Date) => date < new Date(Date.now() - 55 * 60 * 1000);
 
 // The prices should be updated every 1 hour, by randomly incresing or decreasing the price by 200, and the price should be between 200 and 5000
 export const UseRecalculatePrices = () => ({
