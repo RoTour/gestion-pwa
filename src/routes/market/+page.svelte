@@ -79,10 +79,20 @@
 		appIsLoading.set(false);
 	};
 
-	$: multiplier = 1000;
+	$: multiplier = 1;
 
 	const switchValues = () => {
 		multiplier = multiplier === 1 ? 1000 : 1;
+	};
+
+	const canSell = (base: number, resource: EnumResource) => {
+		console.debug({
+			ressourcesAvailable: ressourcesAvailable[resource] / 1000n,
+			resource,
+			base,
+			totalToSell: BigInt(multiplier) * BigInt(base)
+		});
+		return ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(base);
 	};
 </script>
 
@@ -128,21 +138,27 @@
 						<Button
 							on:click={() => buy(resource, 1 * multiplier)}
 							disabled={buyPrice * 1 * multiplier > playerGold}
-							className="rounded-lg text-xs {buyPrice * 1 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+							className="rounded-lg text-xs {buyPrice * 1 * multiplier > playerGold
+								? 'bg-gray-300'
+								: ''}"
 						>
 							1{multiplier === 1000 ? 'K' : ''}
 						</Button>
 						<Button
 							on:click={() => buy(resource, 10 * multiplier)}
 							disabled={buyPrice * 10 * multiplier > playerGold}
-							className="rounded-lg text-xs {buyPrice * 10 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+							className="rounded-lg text-xs {buyPrice * 10 * multiplier > playerGold
+								? 'bg-gray-300'
+								: ''}"
 						>
 							10{multiplier === 1000 ? 'K' : ''}
 						</Button>
 						<Button
 							on:click={() => buy(resource, 100 * multiplier)}
 							disabled={buyPrice * 100 * multiplier > playerGold}
-							className="rounded-lg text-xs {buyPrice * 100 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+							className="rounded-lg text-xs {buyPrice * 100 * multiplier > playerGold
+								? 'bg-gray-300'
+								: ''}"
 						>
 							100{multiplier === 1000 ? 'K' : ''}
 						</Button>
@@ -152,34 +168,22 @@
 					<div class="ml-auto flex gap-4">
 						<Button
 							on:click={() => sell(resource, 1 * multiplier)}
-							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 1n}
-							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-								BigInt(multiplier) <
-							1n
-								? 'bg-gray-300'
-								: 'bg-red-300'}"
+							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(1))}
+							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(1)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
 							1{multiplier === 1000 ? 'K' : ''}
 						</Button>
 						<Button
 							on:click={() => sell(resource, 10 * multiplier)}
-							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 10n}
-							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-								BigInt(multiplier) <
-							10n
-								? 'bg-gray-300'
-								: 'bg-red-300'}"
+							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(10))}
+							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(10)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
 							10{multiplier === 1000 ? 'K' : ''}
 						</Button>
 						<Button
 							on:click={() => sell(resource, 100 * multiplier)}
-							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 100n}
-							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-								BigInt(multiplier) <
-							100n
-								? 'bg-gray-300'
-								: 'bg-red-300'}"
+							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(100))}
+							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(100)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
 							100{multiplier === 1000 ? 'K' : ''}
 						</Button>
