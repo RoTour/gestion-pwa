@@ -12,6 +12,10 @@ declare global {
 		interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		interface ApiResponse <T> {
+			message: string;
+			data?: T;
+		}
 	}
 }
 

@@ -13,7 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"postinstall": "prisma generate"
+		"postinstall": "npx svelte-kit sync && npx prisma generate"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",

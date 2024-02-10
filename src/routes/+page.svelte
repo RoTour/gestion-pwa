@@ -3,21 +3,22 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';
+	import GoldAmount from '$lib/components/GoldAmount.svelte';
 	import ManageWorkforce from '$lib/components/ManageWorkforce.svelte';
 	import ResourceIcon from '$lib/components/ResourceIcon.svelte';
 	import SecondaryButton from '$lib/components/SecondaryButton.svelte';
 	import { handleSubmit } from '$lib/helpers/form.helper';
+	import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
 	import {
 		playerCitizensAvailable,
 		playerInfos,
 		playerCitizensMax as playerMaxCitizens,
 		playerResources,
-		playerWorkforces
+		playerWorkforces,
+		upgradeProductionLevel
 	} from '$lib/stores/playerInfos.store';
 	import type { Resources, Workforce } from '@prisma/client';
 	import type { PageData } from './$types';
-	import GoldAmount from '$lib/components/GoldAmount.svelte';
-	import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
 
 	export let data: PageData;
 	let player: typeof data.player;
@@ -58,6 +59,7 @@
 		playerWorkforces.set(newValues.Workforces ?? []);
 		playerCitizensAvailable.set(data.citizenAvailable);
 		playerMaxCitizens.set(data.maxCitizens);
+		upgradeProductionLevel.set(data.prodBoostUpgradeLevel);
 	};
 
 	const initWorkforces = (newValues: Workforce[]) => {
@@ -65,7 +67,8 @@
 			player.Upgrades.find((upgrade) => upgrade.type === 'MORE_PPL')?.level || 0;
 
 		const maxCitizens: number = UpgradesBoosts.MORE_PPL[townHallLevel]?.value ?? player.maxCitizens;
-		const citizenAvailable: number = maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0);
+		const citizenAvailable: number =
+			maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0);
 		playerCitizensAvailable.set(citizenAvailable);
 		workforces.wood = newValues?.find((c) => c.resource === 'WOOD')?.amount ?? 0;
 		workforces.marble = newValues?.find((c) => c.resource === 'MARBLE')?.amount ?? 0;
@@ -164,6 +167,10 @@
 		</li>
 	{/key}
 </ul>
+
+{#if $upgradeProductionLevel > 0}
+	<p class="p-4">{UpgradesBoosts.PROD_BOOST[$upgradeProductionLevel].label}</p>
+{/if}
 
 <form method="POST" action="?/saveworkforce" use:enhance={saveChanges} class="p-4">
 	{#if touched}

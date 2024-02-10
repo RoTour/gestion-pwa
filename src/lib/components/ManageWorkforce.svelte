@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { playerCitizensAvailable } from '$lib/stores/playerInfos.store';
+	import { playerCitizensAvailable, upgradeProductionLevel } from '$lib/stores/playerInfos.store';
 	import { createEventDispatcher } from 'svelte';
 	import type { IconType } from '../../models/IconType';
 	import ResourceIcon from './ResourceIcon.svelte';
+	import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
 
 	export let resourceType: IconType = 'wood';
 	export let resourceAmount: bigint = 0n;
@@ -21,13 +22,17 @@
 		}
 		touchedEmitter('touched', { touched: initialWorkforce !== workforce});
 	};
+
+	const getTotalHourlyProduction = () => {
+		return Math.floor(workforce * UpgradesBoosts.PROD_BOOST[$upgradeProductionLevel].value);
+	};
 </script>
 
 <div class="flex items-center">
 	<div class="flex flex-1 items-center">
 		<ResourceIcon type={resourceType} />
 		<p class="">{Math.floor(Number(BigInt(resourceAmount) / 1000n))}</p>
-		<p class="ml-2">({workforce}/h)</p>
+		<p class="ml-2">({getTotalHourlyProduction()}/h)</p>
 	</div>
 
 	<div class="ml-auto flex items-center gap-4">

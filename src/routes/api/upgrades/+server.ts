@@ -1,6 +1,7 @@
+import { json } from '$lib/modules/api/ApiResponse.builder';
 import { UseUpgrade } from '$lib/modules/upgrades/usecases/UseUpgrade.usecase';
 import type { EnumUpgradeType } from '@prisma/client';
-import { json, type RequestHandler } from '@sveltejs/kit';
+import { type RequestHandler } from '@sveltejs/kit';
 
 const isUpgradeType = (upgradeType: string): boolean => {
 	return (
@@ -16,12 +17,13 @@ export const POST: RequestHandler = async ({ locals, request }) => {
 	if (!user) return json({ message: 'Unauthorized' }, { status: 401 });
 	const body = await request.json();
 	const upgradeType: string = body.type;
+	console.log('upgradeType', upgradeType);
 	if (!upgradeType) return json({ message: 'Missing upgradeType' }, { status: 400 });
 	if (!isUpgradeType(upgradeType)) return json({ message: 'Invalid upgradeType' }, { status: 400 });
 
 	try {
 		const newPlayerData = await UseUpgrade().execute(user.email ?? '', upgradeType as EnumUpgradeType);
-		return json({ message: 'Upgrade successfull', newPlayerData: newPlayerData });
+		return json({ message: 'Upgrade successfull', data: newPlayerData });
 	} catch (error) {
 		console.error(error);
 		if (error instanceof Error) return json({ message: error.message }, { status: 403 });

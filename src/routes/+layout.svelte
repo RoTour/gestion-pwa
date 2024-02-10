@@ -7,8 +7,8 @@
 	import { appIsLoading } from '$lib/stores/appIsLoading.store';
 	import { playerResources } from '$lib/stores/playerInfos.store';
 	import { inject } from '@vercel/analytics';
-	import '../app.css';
 	import { onMount } from 'svelte';
+	import '../app.css';
 
 	inject({ mode: dev ? 'development' : 'production' });
 
@@ -26,7 +26,7 @@
 </script>
 
 <header class="flex justify-between items-center mb-4">
-	<p>AppVersion: 7.0.4</p>
+	<p>AppVersion: 7.1.0</p>
 	{#if !isAuthPage}
 		<Button on:click={logout}>Logout</Button>
 	{/if}

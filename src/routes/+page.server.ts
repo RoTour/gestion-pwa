@@ -1,4 +1,4 @@
-import { DashboardRepository } from '$lib/modules/dashboard/dashboard.repository';
+import { DashboardRepository, type PlayerData } from '$lib/modules/dashboard/dashboard.repository';
 import { UpgradesBoosts } from '$lib/modules/upgrades/upgrades.data';
 import type { Upgrade } from '@prisma/client';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 		}
 	});
 
-	const player = await DashboardRepository().getPlayerFromEmail(user?.email || '');
+	const player: PlayerData = await DashboardRepository().getPlayerFromEmail(user?.email || '');
 	if (!player) {
 		throw redirect(303, '/auth/login');
 	}
@@ -29,10 +29,13 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
 		maxCitizens - player.Workforces.reduce((acc, workforce) => acc + workforce.amount, 0);
 	console.debug({ townHallLevel, maxCitizens, citizenAvailable });
 
+	const prodBoostUpgradeLevel: number = player.Upgrades.find((up) => up.type === 'PROD_BOOST')?.level || 0;
+
 	return {
 		player,
 		maxCitizens,
-		citizenAvailable
+		citizenAvailable,
+		prodBoostUpgradeLevel,
 	};
 };
 

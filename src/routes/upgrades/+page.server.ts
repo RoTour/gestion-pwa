@@ -14,7 +14,13 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 		EnumUpgradeType.MORE_PPL
 	);
 
+	const prodBoostUpgradeDetails: UpgradeDetails = await UseGetUpgradeDetails().execute(
+		user.email ?? '',
+		EnumUpgradeType.PROD_BOOST
+	);
+
 	return {
-		citizenUpgradeDetails
+		citizenUpgradeDetails,
+		prodBoostUpgradeDetails,
 	};
 };

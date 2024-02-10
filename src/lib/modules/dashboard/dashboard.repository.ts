@@ -1,5 +1,8 @@
 import { prisma } from '$lib/clients/prisma';
 
+// return type of DashboardRepository().getPlayerFromEmail
+export type PlayerData = Awaited<ReturnType<ReturnType<typeof DashboardRepository>['getPlayerFromEmail']>>;
+
 export const DashboardRepository = () => ({
 	getPlayerFromEmail: async (email: string) => {
 		let user = await prisma.player.findUnique({

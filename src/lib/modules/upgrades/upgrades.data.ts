@@ -1,5 +1,6 @@
 import type { EnumUpgradeType } from '@prisma/client';
 import type { UpgradeLevel } from './entities/UpgradeLevel.entity';
+import type { UpgradeBoost } from './dto/UpgradeBoost.dto';
 
 export const UpgradesCosts: Record<EnumUpgradeType, Record<number, UpgradeLevel>> = {
 	PSV_INC: {
@@ -34,7 +35,18 @@ export const UpgradesCosts: Record<EnumUpgradeType, Record<number, UpgradeLevel>
 			]
 		}
 	},
-	EQL_PRICES: {},
+	EQL_PRICES: {
+		1: {
+			costs: [
+				{ resource: 'GOLD', amount: 100_000_000 },
+				{ resource: 'WOOD', amount: 1_000_000_000 },
+				{ resource: 'MARBLE', amount: 1_000_000_000 },
+				{ resource: 'WINE', amount: 1_000_000_000 },
+				{ resource: 'SULFUR', amount: 10_000_000_000 },
+				{ resource: 'CRYSTAL', amount: 10_000_000_000 }
+			]
+		}
+	},
 	MORE_PPL: {
 		1: {
 			costs: [
@@ -117,12 +129,103 @@ export const UpgradesCosts: Record<EnumUpgradeType, Record<number, UpgradeLevel>
 			]
 		}
 	},
-	PROD_BOOST: {}
+	PROD_BOOST: {
+		1: {
+			costs: [
+				{ resource: 'GOLD', amount: 1_000_00 }, // 1K
+				{ resource: 'WOOD', amount: 1_000_000 }, // 1K
+			]
+		},
+		2: {
+			costs: [
+				{ resource: 'GOLD', amount: 10_000_00 }, // 10K
+				{ resource: 'WOOD', amount: 10_000_000 }, // 10K
+				{ resource: 'MARBLE', amount: 5_000_000 }, // 5K
+			]
+		},
+		3: {
+			costs: [
+				{ resource: 'GOLD', amount: 100_000_00 }, // 100K
+				{ resource: 'WOOD', amount: 50_000_000 }, // 50K
+				{ resource: 'MARBLE', amount: 25_000_000 }, // 25K
+				{ resource: 'WINE', amount: 12_500_000 }, // 12.5K
+			]
+		},
+		4: {
+			costs: [
+				{ resource: 'GOLD', amount: 1_000_000_00 }, // 1M
+				{ resource: 'WOOD', amount: 100_000_000 }, // 100K
+				{ resource: 'MARBLE', amount: 50_000_000 }, // 50K
+				{ resource: 'WINE', amount: 25_000_000 }, // 25K
+				{ resource: 'SULFUR', amount: 12_500_000 }, // 12.5K
+			]
+		},
+		5: {
+			costs: [
+				{ resource: 'GOLD', amount: 5_000_000_00 }, // 5M
+				{ resource: 'WOOD', amount: 500_000_000 }, // 500K
+				{ resource: 'MARBLE', amount: 250_000_000 }, // 250K
+				{ resource: 'WINE', amount: 125_000_000 }, // 125K
+				{ resource: 'SULFUR', amount: 62_500_000 }, // 62.5K
+				{ resource: 'CRYSTAL', amount: 31_250_000 }, // 31.25K
+			]
+		},
+		6: {
+			costs: [
+				{ resource: 'GOLD', amount: 10_000_000_00 }, // 10M
+				{ resource: 'WOOD', amount: 1_000_000_000 }, // 1M
+				{ resource: 'MARBLE', amount: 500_000_000 }, // 500K
+				{ resource: 'WINE', amount: 250_000_000 }, // 250K
+				{ resource: 'SULFUR', amount: 125_000_000 }, // 125K
+				{ resource: 'CRYSTAL', amount: 62_500_000 }, // 62.5K
+			]
+		},
+		7: {
+			costs: [
+				{ resource: 'GOLD', amount: 25_000_000_00 }, // 25M
+				{ resource: 'WOOD', amount: 1_000_000_000 }, // 1M
+				{ resource: 'MARBLE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'WINE', amount: 500_000_000 }, // 500K
+				{ resource: 'SULFUR', amount: 250_000_000 }, // 250K
+				{ resource: 'CRYSTAL', amount: 125_000_000 }, // 125K
+			]
+		},
+		8: {
+			costs: [
+				{ resource: 'GOLD', amount: 50_000_000_00 }, // 50M
+				{ resource: 'WOOD', amount: 1_000_000_000 }, // 1M
+				{ resource: 'MARBLE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'WINE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'SULFUR', amount: 500_000_000 }, // 500K
+				{ resource: 'CRYSTAL', amount: 250_000_000 }, // 250K
+			]
+		},
+		9: {
+			costs: [
+				{ resource: 'GOLD', amount: 75_000_000_00 }, // 100M
+				{ resource: 'WOOD', amount: 1_000_000_000 }, // 1M
+				{ resource: 'MARBLE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'WINE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'SULFUR', amount: 1_000_000_000 }, // 1M
+				{ resource: 'CRYSTAL', amount: 500_000_000 }, // 500K
+			]
+		},
+		10: {
+			costs: [
+				{ resource: 'GOLD', amount: 100_000_000_00 }, // 100M
+				{ resource: 'WOOD', amount: 10_000_000_000 }, // 10M
+				{ resource: 'MARBLE', amount: 10_000_000_000 }, // 10M
+				{ resource: 'WINE', amount: 10_000_000_000 }, // 10M
+				{ resource: 'SULFUR', amount: 10_000_000_000 }, // 10M
+				{ resource: 'CRYSTAL', amount: 10_000_000_000 } // 10M
+			]
+		}
+	}
 };
 
 export const UpgradesBoosts: Record<
 	EnumUpgradeType,
-	Record<number, { value: number; label: string }>
+	Record<number, UpgradeBoost>
 > = {
 	PSV_INC: {
 		1: {

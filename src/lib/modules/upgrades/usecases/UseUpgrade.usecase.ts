@@ -1,10 +1,15 @@
 import { prisma } from '$lib/clients/prisma';
-import type { EnumUpgradeType } from '@prisma/client';
+import type { EnumUpgradeType, Resources } from '@prisma/client';
 import { UpgradesCosts } from '../upgrades.data';
 import { getResourceFromEnum } from '$lib/helpers/resources.helper';
 
+export interface UpgradeResult {
+	resources: Resources;
+	newLevel: number;
+}
+
 export const UseUpgrade = () => ({
-	execute: async (email: string, upgradeType: EnumUpgradeType) => {
+	execute: async (email: string, upgradeType: EnumUpgradeType): Promise<UpgradeResult> => {
 		return prisma.$transaction(async (prisma) => {
 			const user = await prisma.player.findUnique({
 				where: { email },
@@ -56,8 +61,10 @@ export const UseUpgrade = () => ({
 			const newResources = await prisma.resources.findUnique({
 				where: { playerId: user.id }
 			});
+			if (!newResources) throw new Error('Resources not found');
 			return {
-				resources: newResources
+				resources: newResources,
+				newLevel: currentUpdateLevel + 1
 			}
 		});
 	}
