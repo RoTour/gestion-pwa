@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import { page } from '$app/stores';
 	import Button from '$lib/components/Button.svelte';
 	import GoldAmount from '$lib/components/GoldAmount.svelte';
 	import ResourceIcon from '$lib/components/ResourceIcon.svelte';
@@ -10,7 +11,6 @@
 	import { onMount } from 'svelte';
 	import type { IconType } from '../../models/IconType';
 	import type { PageServerData } from './$types';
-	import { page } from '$app/stores';
 
 	export let data: PageServerData;
 	const order = ['WOOD', 'MARBLE', 'SULFUR', 'WINE', 'CRYSTAL'];
@@ -78,6 +78,12 @@
 		}
 		appIsLoading.set(false);
 	};
+
+	$: multiplier = 1;
+
+	const switchValues = () => {
+		multiplier = multiplier === 1 ? 1000 : 1;
+	};
 </script>
 
 <GoldAmount />
@@ -119,50 +125,62 @@
 			{#if action === 'buy'}
 				<div class="ml-auto flex gap-4">
 					<Button
-						on:click={() => buy(resource, 1)}
-						disabled={buyPrice * 1 > playerGold}
+						on:click={() => buy(resource, 1 * multiplier)}
+						disabled={buyPrice * 1 * multiplier > playerGold}
 						className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
 					>
-						1
+						1{multiplier === 1000 ? 'K' : ''}
 					</Button>
 					<Button
-						on:click={() => buy(resource, 10)}
-						disabled={buyPrice * 10 > playerGold}
+						on:click={() => buy(resource, 10 * multiplier)}
+						disabled={buyPrice * 10 * multiplier > playerGold}
 						className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
 					>
-						10
+						10{multiplier === 1000 ? 'K' : ''}
 					</Button>
 					<Button
-						on:click={() => buy(resource, 100)}
-						disabled={buyPrice * 100 > playerGold}
+						on:click={() => buy(resource, 100 * multiplier)}
+						disabled={buyPrice * 100 * multiplier > playerGold}
 						className="rounded-lg text-xs {buyPrice * 100 > playerGold ? 'bg-gray-300' : ''}"
 					>
-						100
+						100{multiplier === 1000 ? 'K' : ''}
 					</Button>
 				</div>
 			{:else}
 				<!-- Selling -->
 				<div class="ml-auto flex gap-4">
 					<Button
-						on:click={() => sell(resource, 1)}
-						disabled={ressourcesAvailable[resource] / 1000n < 1n}
-						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 1n
+						on:click={() => sell(resource, 1 * multiplier)}
+						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 1n}
+						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+							BigInt(multiplier) <
+						1n
 							? 'bg-gray-300'
-							: 'bg-red-300'}">1</Button
+							: 'bg-red-300'}"
 					>
+						1{multiplier === 1000 ? 'K' : ''}
+					</Button>
 					<Button
-						on:click={() => sell(resource, 10)}
-						disabled={ressourcesAvailable[resource] / 1000n < 10n}
-						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 10n
+						on:click={() => sell(resource, 10 * multiplier)}
+						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 10n}
+						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+							BigInt(multiplier) <
+						10n
 							? 'bg-gray-300'
-							: 'bg-red-300'}">10</Button
+							: 'bg-red-300'}"
 					>
+						10{multiplier === 1000 ? 'K' : ''}
+					</Button>
 					<Button
-						on:click={() => sell(resource, 100)}
-						disabled={ressourcesAvailable[resource] / 1000n < 100n}
-						className="rounded-lg text-xs {ressourcesAvailable[resource] / 1000n < 100n
+						on:click={() => sell(resource, 100 * multiplier)}
+						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 100n}
+						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+							BigInt(multiplier) <
+						100n
 							? 'bg-gray-300'
-							: 'bg-red-300'}">100</Button
+							: 'bg-red-300'}">
+							100{multiplier === 1000 ? 'K' : ''}
+							</Button
 					>
 				</div>
 			{/if}
@@ -170,11 +188,21 @@
 	{/each}
 </div>
 <p class="text-xs">Dernière mise à jour: {lastUpdate}</p>
-<div class="w-fit ml-auto px-4">
-	<div>
-		<a href="/market/history" class="flex flex-col items-center justify-center">
-			<img src="history.png" alt="History" class="w-16 h-16" />
-			<p class="text-sm leading-4 -mt-1">History</p>
-		</a>
+<div class="flex justify-end gap-4 p-4">
+	<div class="w-fit">
+		<div>
+			<a href="/market/history" class="flex flex-col items-center justify-center">
+				<img src="history.png" alt="History" class="w-16 h-16" />
+				<p class="text-sm leading-4 -mt-1">History</p>
+			</a>
+		</div>
+	</div>
+	<div class="w-fit">
+		<div>
+			<button on:click={switchValues} class="flex flex-col items-center justify-center">
+				<img src="switch.png" alt="History" class="w-16 h-16" />
+				<p class="text-sm leading-4 -mt-1">Switch</p>
+			</button>
+		</div>
 	</div>
 </div>
