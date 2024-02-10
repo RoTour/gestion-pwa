@@ -79,7 +79,7 @@
 		appIsLoading.set(false);
 	};
 
-	$: multiplier = 1;
+	$: multiplier = 1000;
 
 	const switchValues = () => {
 		multiplier = multiplier === 1 ? 1000 : 1;
@@ -122,68 +122,70 @@
 				</div>
 			</div>
 
-			{#if action === 'buy'}
-				<div class="ml-auto flex gap-4">
-					<Button
-						on:click={() => buy(resource, 1 * multiplier)}
-						disabled={buyPrice * 1 * multiplier > playerGold}
-						className="rounded-lg text-xs {buyPrice * 1 > playerGold ? 'bg-gray-300' : ''}"
-					>
-						1{multiplier === 1000 ? 'K' : ''}
-					</Button>
-					<Button
-						on:click={() => buy(resource, 10 * multiplier)}
-						disabled={buyPrice * 10 * multiplier > playerGold}
-						className="rounded-lg text-xs {buyPrice * 10 > playerGold ? 'bg-gray-300' : ''}"
-					>
-						10{multiplier === 1000 ? 'K' : ''}
-					</Button>
-					<Button
-						on:click={() => buy(resource, 100 * multiplier)}
-						disabled={buyPrice * 100 * multiplier > playerGold}
-						className="rounded-lg text-xs {buyPrice * 100 > playerGold ? 'bg-gray-300' : ''}"
-					>
-						100{multiplier === 1000 ? 'K' : ''}
-					</Button>
-				</div>
-			{:else}
-				<!-- Selling -->
-				<div class="ml-auto flex gap-4">
-					<Button
-						on:click={() => sell(resource, 1 * multiplier)}
-						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 1n}
-						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-							BigInt(multiplier) <
-						1n
-							? 'bg-gray-300'
-							: 'bg-red-300'}"
-					>
-						1{multiplier === 1000 ? 'K' : ''}
-					</Button>
-					<Button
-						on:click={() => sell(resource, 10 * multiplier)}
-						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 10n}
-						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-							BigInt(multiplier) <
-						10n
-							? 'bg-gray-300'
-							: 'bg-red-300'}"
-					>
-						10{multiplier === 1000 ? 'K' : ''}
-					</Button>
-					<Button
-						on:click={() => sell(resource, 100 * multiplier)}
-						disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 100n}
-						className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
-							BigInt(multiplier) <
-						100n
-							? 'bg-gray-300'
-							: 'bg-red-300'}">
+			{#key multiplier}
+				{#if action === 'buy'}
+					<div class="ml-auto flex gap-4">
+						<Button
+							on:click={() => buy(resource, 1 * multiplier)}
+							disabled={buyPrice * 1 * multiplier > playerGold}
+							className="rounded-lg text-xs {buyPrice * 1 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+						>
+							1{multiplier === 1000 ? 'K' : ''}
+						</Button>
+						<Button
+							on:click={() => buy(resource, 10 * multiplier)}
+							disabled={buyPrice * 10 * multiplier > playerGold}
+							className="rounded-lg text-xs {buyPrice * 10 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+						>
+							10{multiplier === 1000 ? 'K' : ''}
+						</Button>
+						<Button
+							on:click={() => buy(resource, 100 * multiplier)}
+							disabled={buyPrice * 100 * multiplier > playerGold}
+							className="rounded-lg text-xs {buyPrice * 100 * multiplier > playerGold ? 'bg-gray-300' : ''}"
+						>
 							100{multiplier === 1000 ? 'K' : ''}
-							</Button
-					>
-				</div>
-			{/if}
+						</Button>
+					</div>
+				{:else}
+					<!-- Selling -->
+					<div class="ml-auto flex gap-4">
+						<Button
+							on:click={() => sell(resource, 1 * multiplier)}
+							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 1n}
+							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+								BigInt(multiplier) <
+							1n
+								? 'bg-gray-300'
+								: 'bg-red-300'}"
+						>
+							1{multiplier === 1000 ? 'K' : ''}
+						</Button>
+						<Button
+							on:click={() => sell(resource, 10 * multiplier)}
+							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 10n}
+							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+								BigInt(multiplier) <
+							10n
+								? 'bg-gray-300'
+								: 'bg-red-300'}"
+						>
+							10{multiplier === 1000 ? 'K' : ''}
+						</Button>
+						<Button
+							on:click={() => sell(resource, 100 * multiplier)}
+							disabled={(ressourcesAvailable[resource] / 1000n) * BigInt(multiplier) < 100n}
+							className="rounded-lg text-xs {(ressourcesAvailable[resource] / 1000n) *
+								BigInt(multiplier) <
+							100n
+								? 'bg-gray-300'
+								: 'bg-red-300'}"
+						>
+							100{multiplier === 1000 ? 'K' : ''}
+						</Button>
+					</div>
+				{/if}
+			{/key}
 		</div>
 	{/each}
 </div>
