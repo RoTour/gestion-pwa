@@ -31,7 +31,7 @@ export const ResourcesServices = () => ({
 			const updates = ressourceTypes.map((type) => {
 				const resourceType: keyof ResourceName = type.toLocaleLowerCase() as keyof ResourceName;
 				const baseRate  = playerWorkforces.find((workforce) => workforce.resource === type)?.amount;
-				const rate = baseRate ? baseRate * UpgradesBoosts.PROD_BOOST[productionBoostLevel].value : 0;
+				const rate = baseRate ? baseRate * (UpgradesBoosts.PROD_BOOST[productionBoostLevel]?.value ?? 1) : 0;
 				const newAmount = calculateNewAmount(playerResources[resourceType], rate || 0, seconds);
 				if (newAmount === Number(playerResources[resourceType])) return;
 

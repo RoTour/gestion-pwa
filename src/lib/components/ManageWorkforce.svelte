@@ -24,7 +24,7 @@
 	};
 
 	const getTotalHourlyProduction = () => {
-		return Math.floor(workforce * (UpgradesBoosts.PROD_BOOST[$upgradeProductionLevel]?.value ?? 0));
+		return Math.floor(workforce * (UpgradesBoosts.PROD_BOOST[$upgradeProductionLevel]?.value ?? 1));
 	};
 </script>
 
