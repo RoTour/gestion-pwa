@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 body {
-  touch-action: none;
-  -ms-touch-action: none;
+  touch-action: manipulation;
+  -ms-touch-action: manipulation;
 }
