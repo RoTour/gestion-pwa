@@ -12,10 +12,11 @@ const calculateNewAmount = (oldAmount: bigint, rate: number, seconds: number): n
 
 export const ResourcesServices = () => ({
 	updateResources: async (email: string) => {
-		return prisma.$transaction(async () => {
+		return prisma.$transaction(async (prisma) => {
 			const user = await prisma.player.findUnique({
 				where: { email },
-				include: { Upgrades: true }
+				include: { Upgrades: true },
+				cacheStrategy: { ttl: 120 },
 			});
 			if (!user) return;
 			const playerResources = await prisma.resources.findUnique({ where: { playerId: user.id } });

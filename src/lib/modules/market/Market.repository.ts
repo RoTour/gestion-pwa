@@ -8,7 +8,9 @@ type PriceGenerationParams = {
 };
 export const MarketRepository = () => ({
 	getPrices: async () => {
-		return prisma.resourcePrice.findMany();
+		return prisma.resourcePrice.findMany({
+			cacheStrategy: { ttl: 120 },
+		});
 	},
 	generatePrices: async (resources: PriceGenerationParams[]) => {
 		await prisma.$transaction(async () => {
@@ -117,7 +119,8 @@ export const MarketRepository = () => ({
 			if (!price) throw new Error('Resource not found');
 			const user = await prisma.player.findUnique({
 				where: { email: userEmail },
-				include: { Resources: true }
+				include: { Resources: true },
+				cacheStrategy: { ttl: 120 },
 			});
 			if (!user) throw new Error('User not found');
 			const totalPrice = (price.price + 100) * quantity;
