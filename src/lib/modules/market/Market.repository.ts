@@ -120,7 +120,6 @@ export const MarketRepository = () => ({
 			const user = await prisma.player.findUnique({
 				where: { email: userEmail },
 				include: { Resources: true },
-				cacheStrategy: { ttl: 120 },
 			});
 			if (!user) throw new Error('User not found');
 			const totalPrice = (price.price + 100) * quantity;

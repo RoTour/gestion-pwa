@@ -8,7 +8,7 @@ export const DashboardRepository = () => ({
 		let user = await prisma.player.findUnique({
 			where: { email: email },
 			include: { Resources: true, Workforces: true, Upgrades: true},
-			cacheStrategy: { ttl: 120 },
+			cacheStrategy: { ttl: 0 },
 		});
 		if (!user) {
 			await prisma.player.create({
