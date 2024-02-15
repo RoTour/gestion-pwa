@@ -8,6 +8,8 @@
 	export let data: PageServerData;
 	$: citizenUpgradeDetails = data.citizenUpgradeDetails;
 	$: prodBoostUpgradeDetails = data.prodBoostUpgradeDetails;
+	$: passiveIncomeUpgradeDetails = data.passiveIncomeUpgradeDetails;
+	$: equalPricesUpgradeDetails = data.equalPricesUpgradeDetails
 	$: console.debug({ playerResources: $playerResources });
 
 	let upgradeDetails: (UpgradeDetails & { iconFileName: string }) | undefined;
@@ -17,6 +19,10 @@
 			return (upgradeDetails = { ...citizenUpgradeDetails, iconFileName: 'citizens' });
 		if (type === 'PROD_BOOST')
 			return (upgradeDetails = { ...prodBoostUpgradeDetails, iconFileName: 'resources' });
+		if (type === 'PSV_INC')
+			return (upgradeDetails = { ...passiveIncomeUpgradeDetails, iconFileName: 'passive' });
+		if (type === 'EQL_PRICES')
+			return (upgradeDetails = { ...equalPricesUpgradeDetails, iconFileName: 'trade' });
 		console.log(type);
 	};
 </script>
@@ -67,6 +73,34 @@
 				alt="Production améliorée"
 			/>
 			<p class="-mt-2 pb-2 font-light text-nowrap text-sm">Production améliorée</p>
+		</div>
+	</button>
+	<button
+		on:click={() => openUpgradeModal('PSV_INC')}
+		class="flex-1 m-4 flex items-center justify-center aspect-square bg-white
+		 border-2 border-emerald-300"
+	>
+		<div class="flex flex-col items-center justify-center">
+			<img
+				class="aspect-square h-24 inline-block"
+				src="/upgrades/passive.png"
+				alt="Production améliorée"
+			/>
+			<p class="-mt-2 pb-2 font-light text-nowrap text-sm">Investissements<br/> passifs</p>
+		</div>
+	</button>
+	<button
+		on:click={() => openUpgradeModal('EQL_PRICES')}
+		class="flex-1 m-4 flex items-center justify-center aspect-square bg-white
+		 border-2 border-emerald-300"
+	>
+		<div class="flex flex-col items-center justify-center">
+			<img
+				class="aspect-square h-24 inline-block scale-110"
+				src="/upgrades/trade.png"
+				alt="Prix équitables"
+			/>
+			<p class="-mt-2 pb-2 font-light text-nowrap text-sm">Expert Tradder</p>
 		</div>
 	</button>
 

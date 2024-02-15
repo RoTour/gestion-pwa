@@ -42,6 +42,21 @@ export const ResourcesServices = () => ({
 				});
 			});
 			await Promise.all(updates);
+
+			const passiveGoldUpgradeLevel = user.Upgrades.find((upgrade) => upgrade.type === 'PSV_INC')?.level || 0;
+			if (passiveGoldUpgradeLevel <= 0) return;
+			const rate = UpgradesBoosts.PSV_INC[passiveGoldUpgradeLevel]?.value || 0;
+			const newAmount = calculateNewAmount(playerResources.gold, rate, seconds);
+			console.debug("gold", {
+				rate,
+				oldAmount: playerResources.gold,
+				newAmount,
+			})
+			if (newAmount === Number(playerResources.gold)) return;
+			await prisma.resources.update({
+				where: { playerId: user.id },
+				data: { updatedAt: now, gold: newAmount }
+			});
 		});
 	}
 });

@@ -1,6 +1,7 @@
 import { prisma } from '$lib/clients/prisma';
 import { EnumTransactionType, type EnumResource } from '@prisma/client';
 import type { TotalResourceAmount } from './entities/TotalResourceAmount';
+import { UseUserHasEqualPricesUpgrade } from '../upgrades/usecases/UseUserHasEqualPricesUpgrade.usecase';
 
 type PriceGenerationParams = {
 	resource: EnumResource;
@@ -122,7 +123,10 @@ export const MarketRepository = () => ({
 				include: { Resources: true },
 			});
 			if (!user) throw new Error('User not found');
-			const totalPrice = (price.price + 100) * quantity;
+
+			const hasEqualPricesUpgrade = await UseUserHasEqualPricesUpgrade().execute(user.email);
+			
+			const totalPrice = (price.price + (hasEqualPricesUpgrade ? 0 : 100)) * quantity;
 			if (user.Resources?.gold && user.Resources.gold < BigInt(totalPrice))
 				throw new Error('Not enough gold');
 			const currentAmountOfResource =

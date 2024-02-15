@@ -19,8 +19,20 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 		EnumUpgradeType.PROD_BOOST
 	);
 
+	const passiveIncomeUpgradeDetails: UpgradeDetails = await UseGetUpgradeDetails().execute(
+		user.email ?? '',
+		EnumUpgradeType.PSV_INC
+	);
+
+	const equalPricesUpgradeDetails: UpgradeDetails = await UseGetUpgradeDetails().execute(
+		user.email ?? '',
+		EnumUpgradeType.EQL_PRICES
+	);
+
 	return {
 		citizenUpgradeDetails,
 		prodBoostUpgradeDetails,
+		passiveIncomeUpgradeDetails,
+		equalPricesUpgradeDetails,
 	};
 };

@@ -1,37 +1,57 @@
 import type { EnumUpgradeType } from '@prisma/client';
-import type { UpgradeLevel } from './entities/UpgradeLevel.entity';
 import type { UpgradeBoost } from './dto/UpgradeBoost.dto';
+import type { UpgradeLevel } from './entities/UpgradeLevel.entity';
 
 export const UpgradesCosts: Record<EnumUpgradeType, Record<number, UpgradeLevel>> = {
 	PSV_INC: {
 		1: {
 			costs: [
-				{ resource: 'GOLD', amount: 100_000 },
-				{ resource: 'WOOD', amount: 1_000_000 },
-				{ resource: 'MARBLE', amount: 1_000_000 },
-				{ resource: 'WINE', amount: 1_000_000 },
-				{ resource: 'SULFUR', amount: 1_000_000 },
-				{ resource: 'CRYSTAL', amount: 1_000_000 }
+				{ resource: 'GOLD', amount: 10_000_00 }, // 10K
+				{ resource: 'WOOD', amount: 10_000_000 }, // 10K
+				{ resource: 'MARBLE', amount: 10_000_000 }, // 10K
+				{ resource: 'WINE', amount: 10_000_000 }, // 10K
+				{ resource: 'SULFUR', amount: 10_000_000 }, // 10K
+				{ resource: 'CRYSTAL', amount: 10_000_000 } // 10K
 			]
 		},
 		2: {
 			costs: [
-				{ resource: 'GOLD', amount: 1_000_000 },
-				{ resource: 'WOOD', amount: 10_000_000 },
-				{ resource: 'MARBLE', amount: 10_000_000 },
-				{ resource: 'WINE', amount: 10_000_000 },
-				{ resource: 'SULFUR', amount: 10_000_000 },
-				{ resource: 'CRYSTAL', amount: 10_000_000 }
+				{ resource: 'GOLD', amount: 100_000_00 }, // 100K
+				{ resource: 'WOOD', amount: 100_000_000 }, // 100K
+				{ resource: 'MARBLE', amount: 100_000_000 }, // 100K
+				{ resource: 'WINE', amount: 100_000_000 }, // 100K
+				{ resource: 'SULFUR', amount: 100_000_000 }, // 100K
+				{ resource: 'CRYSTAL', amount: 100_000_000 } // 100K
 			]
 		},
 		3: {
 			costs: [
-				{ resource: 'GOLD', amount: 10_000_000 },
-				{ resource: 'WOOD', amount: 100_000_000 },
-				{ resource: 'MARBLE', amount: 100_000_000 },
-				{ resource: 'WINE', amount: 100_000_000 },
-				{ resource: 'SULFUR', amount: 100_000_000 },
-				{ resource: 'CRYSTAL', amount: 100_000_000 }
+				{ resource: 'GOLD', amount: 500_000_00 }, // 500K
+				{ resource: 'WOOD', amount: 500_000_000 }, // 500K
+				{ resource: 'MARBLE', amount: 500_000_000 }, // 500K
+				{ resource: 'WINE', amount: 500_000_000 }, // 500K
+				{ resource: 'SULFUR', amount: 500_000_000 }, // 500K
+				{ resource: 'CRYSTAL', amount: 500_000_000 } // 500K
+			]
+		},
+		4: {
+			costs: [
+				{ resource: 'GOLD', amount: 1_000_000_00 }, // 1M
+				{ resource: 'WOOD', amount: 1_000_000_000 }, // 1M
+				{ resource: 'MARBLE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'WINE', amount: 1_000_000_000 }, // 1M
+				{ resource: 'SULFUR', amount: 1_000_000_000 }, // 1M
+				{ resource: 'CRYSTAL', amount: 1_000_000_000 } // 1M
+			]
+		},
+		5: {
+			costs: [
+				{ resource: 'GOLD', amount: 10_000_000_00 }, // 10M
+				{ resource: 'WOOD', amount: 10_000_000_000 }, // 10M
+				{ resource: 'MARBLE', amount: 10_000_000_000 }, // 10M
+				{ resource: 'WINE', amount: 10_000_000_000 }, // 10M
+				{ resource: 'SULFUR', amount: 10_000_000_000 }, // 10M
+				{ resource: 'CRYSTAL', amount: 10_000_000_000 } // 10M
 			]
 		}
 	},
@@ -307,36 +327,36 @@ export const UpgradesBoosts: Record<
 			label: 'Production +30%'
 		},
 		3: {
-			value: 1.3,
-			label: 'Production +30%'
-		},
-		4: {
 			value: 1.5,
 			label: 'Production +50%'
 		},
-		5: {
+		4: {
 			value: 1.8,
 			label: 'Production +80%'
 		},
-		6: {
+		5: {
 			value: 2.3,
 			label: 'Production +130%'
 		},
-		7: {
+		6: {
 			value: 3.1,
 			label: 'Production +210%'
 		},
-		8: {
+		7: {
 			value: 4.4,
 			label: 'Production +340%'
 		},
-		9: {
+		8: {
 			value: 6.5,
 			label: 'Production +550%'
 		},
+		9: {
+			value: 8.9,
+			label: 'Production +89%'
+		},
 		10: {
-			value: 10,
-			label: 'Production x10'
+			value: 15,
+			label: 'Production x15'
 		}
 	}
 };

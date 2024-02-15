@@ -38,6 +38,8 @@
 
 	$: prices = data.prices.sort((a, b) => order.indexOf(a.resource) - order.indexOf(b.resource));
 	$: lastUpdate = (data.prices[0]?.updatedAt ?? new Date()).toLocaleTimeString();
+	$: hasEqualPricesUpgrade = data.hasEqualPricesUpgrade;
+
 	const formatPrice = (price: number) => {
 		return Math.floor(price / 100);
 	};
@@ -115,7 +117,7 @@
 
 <div class="divide-y-2">
 	{#each prices as { price, resource }}
-		{@const buyPrice = price + 100}
+		{@const buyPrice = price + (hasEqualPricesUpgrade ? 0 : 100)}
 		<div class="flex items-center px-4">
 			<ResourceIcon type={formatResource(resource)} />
 			<div class="flex flex-col leading-4">
