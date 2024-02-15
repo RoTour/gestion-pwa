@@ -299,44 +299,44 @@ export const UpgradesBoosts: Record<
 	},
 	PROD_BOOST: {
 		1: {
-			value: 1.1,
-			label: 'Production +10%'
-		},
-		2: {
 			value: 1.2,
 			label: 'Production +20%'
+		},
+		2: {
+			value: 1.3,
+			label: 'Production +30%'
 		},
 		3: {
 			value: 1.3,
 			label: 'Production +30%'
 		},
 		4: {
-			value: 1.4,
-			label: 'Production +40%'
-		},
-		5: {
 			value: 1.5,
 			label: 'Production +50%'
 		},
-		6: {
-			value: 1.6,
-			label: 'Production +60%'
-		},
-		7: {
-			value: 1.7,
-			label: 'Production +70%'
-		},
-		8: {
+		5: {
 			value: 1.8,
 			label: 'Production +80%'
 		},
+		6: {
+			value: 2.3,
+			label: 'Production +130%'
+		},
+		7: {
+			value: 3.1,
+			label: 'Production +210%'
+		},
+		8: {
+			value: 4.4,
+			label: 'Production +340%'
+		},
 		9: {
-			value: 1.9,
-			label: 'Production +90%'
+			value: 6.5,
+			label: 'Production +550%'
 		},
 		10: {
-			value: 2,
-			label: 'Production x2'
+			value: 10,
+			label: 'Production x10'
 		}
 	}
 };
