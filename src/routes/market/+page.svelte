@@ -84,7 +84,15 @@
 	$: multiplier = 1;
 
 	const switchValues = () => {
-		multiplier = multiplier === 1 ? 1000 : 1;
+		if (multiplier === 1) {
+			multiplier = 1000;
+		} else if (multiplier === 1000) {
+			multiplier = 1000000;
+		} else if (multiplier === 1000000) {
+			multiplier = 1000000000;
+		} else {
+			multiplier = 1;
+		}
 	};
 
 	const canSell = (base: number, resource: EnumResource) => {
@@ -96,6 +104,7 @@
 		});
 		return ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(base);
 	};
+	$: unit = multiplier === 1000 ? 'K' : multiplier === 1000000 ? 'M' : multiplier === 1000000000 ? 'B' : '';
 </script>
 
 <GoldAmount />
@@ -144,7 +153,7 @@
 								? 'bg-gray-300'
 								: ''}"
 						>
-							1{multiplier === 1000 ? 'K' : ''}
+							1{unit}
 						</Button>
 						<Button
 							on:click={() => buy(resource, 10 * multiplier)}
@@ -153,7 +162,7 @@
 								? 'bg-gray-300'
 								: ''}"
 						>
-							10{multiplier === 1000 ? 'K' : ''}
+							10{unit}
 						</Button>
 						<Button
 							on:click={() => buy(resource, 100 * multiplier)}
@@ -162,7 +171,7 @@
 								? 'bg-gray-300'
 								: ''}"
 						>
-							100{multiplier === 1000 ? 'K' : ''}
+							100{unit}
 						</Button>
 					</div>
 				{:else}
@@ -173,21 +182,21 @@
 							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(1))}
 							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(1)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
-							1{multiplier === 1000 ? 'K' : ''}
+							1{unit}
 						</Button>
 						<Button
 							on:click={() => sell(resource, 10 * multiplier)}
 							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(10))}
 							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(10)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
-							10{multiplier === 1000 ? 'K' : ''}
+							10{unit}
 						</Button>
 						<Button
 							on:click={() => sell(resource, 100 * multiplier)}
 							disabled={!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(100))}
 							className="rounded-lg text-xs {!(ressourcesAvailable[resource] / 1000n >= BigInt(multiplier) * BigInt(100)) ? 'bg-gray-300' : 'bg-red-300'}"
 						>
-							100{multiplier === 1000 ? 'K' : ''}
+							100{unit}
 						</Button>
 					</div>
 				{/if}
